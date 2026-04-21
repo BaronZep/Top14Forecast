@@ -2,6 +2,13 @@ let standingsData = [];
 let calendarData = [];
 let currentRoundIdx = 0;
 let userPredictions = {};
+let playoffPredictions = {
+    barrage1: null,
+    barrage2: null,
+    demi1: null,
+    demi2: null,
+    finale: null
+};
 
 const SCORE_OPTIONS = [0, 1, 2, 4, 5];
 const SCORE_COMPATIBILITY = {
@@ -38,7 +45,29 @@ async function loadData() {
 
 function initUI() {
     const toggle = document.getElementById('dark-mode-toggle');
-    toggle.onchange = () => document.body.classList.toggle('dark-mode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // Initialise theme from system preference
+    function applyTheme(dark) {
+        document.body.classList.toggle('dark-mode', dark);
+        document.body.classList.toggle('light-mode', !dark);
+        toggle.checked = dark;
+    }
+
+    applyTheme(prefersDark.matches);
+
+    // Follow system changes in real-time (only if user hasn't overridden)
+    prefersDark.addEventListener('change', e => {
+        if (!toggle.dataset.manualOverride) {
+            applyTheme(e.matches);
+        }
+    });
+
+    // Manual toggle: mark as override, stop following system
+    toggle.onchange = () => {
+        toggle.dataset.manualOverride = '1';
+        applyTheme(toggle.checked);
+    };
 
     document.getElementById('prev-btn').onclick = () => changeRound(-1);
     document.getElementById('next-btn').onclick = () => changeRound(1);
@@ -56,8 +85,13 @@ function changeRound(step) {
 }
 
 function updateDisplay() {
-    renderRankings();
+    const projectedStandings = getProjectedStandings();
+    sanitizePlayoffPredictions(projectedStandings);
+    const playoffBracket = getPlayoffBracket(projectedStandings);
+
+    renderRankings(projectedStandings);
     renderMatches();
+    renderPlayoffs(playoffBracket);
     document.getElementById('round-label').innerText = `Journée ${calendarData[currentRoundIdx].round}`;
 }
 
@@ -91,8 +125,7 @@ function getAllowedScores(opponentScore) {
     return SCORE_COMPATIBILITY[parseInt(opponentScore, 10)] || SCORE_OPTIONS;
 }
 
-function renderRankings() {
-    const body = document.getElementById('rankings-body');
+function getProjectedStandings() {
     const live = standingsData.map(team => ({ ...team }));
 
     calendarData.forEach((round, rIdx) => {
@@ -131,6 +164,12 @@ function renderRankings() {
 
         return 0;
     });
+
+    return live;
+}
+
+function renderRankings(live = getProjectedStandings()) {
+    const body = document.getElementById('rankings-body');
 
     body.innerHTML = live.map((team, i) => {
         let cls = 'p-neutral';
@@ -186,6 +225,155 @@ function calculateHeadToHead(teamA, teamB) {
     });
 
     return { ptsA, ptsB };
+}
+
+
+function getPlayoffBracket(standings = getProjectedStandings()) {
+    const top6 = standings.slice(0, 6);
+
+    if (top6.length < 6) {
+        return null;
+    }
+
+    const seeds = {
+        rank1: top6[0]?.name ?? null,
+        rank2: top6[1]?.name ?? null,
+        rank3: top6[2]?.name ?? null,
+        rank4: top6[3]?.name ?? null,
+        rank5: top6[4]?.name ?? null,
+        rank6: top6[5]?.name ?? null
+    };
+
+    const barrage1Participants = [seeds.rank3, seeds.rank6].filter(Boolean);
+    const barrage2Participants = [seeds.rank4, seeds.rank5].filter(Boolean);
+
+    const barrage1Winner = barrage1Participants.includes(playoffPredictions.barrage1) ? playoffPredictions.barrage1 : null;
+    const barrage2Winner = barrage2Participants.includes(playoffPredictions.barrage2) ? playoffPredictions.barrage2 : null;
+
+    const demi1Participants = [seeds.rank1, barrage2Winner].filter(Boolean);
+    const demi2Participants = [seeds.rank2, barrage1Winner].filter(Boolean);
+
+    const demi1Winner = demi1Participants.includes(playoffPredictions.demi1) ? playoffPredictions.demi1 : null;
+    const demi2Winner = demi2Participants.includes(playoffPredictions.demi2) ? playoffPredictions.demi2 : null;
+
+    const finaleParticipants = [demi1Winner, demi2Winner].filter(Boolean);
+    const finaleWinner = finaleParticipants.includes(playoffPredictions.finale) ? playoffPredictions.finale : null;
+
+    return {
+        barrage1: { id: 'barrage1', label: 'Barrage 1', homeTeam: seeds.rank3, awayTeam: seeds.rank6, homeSeed: '#3', awaySeed: '#6', winner: barrage1Winner },
+        barrage2: { id: 'barrage2', label: 'Barrage 2', homeTeam: seeds.rank4, awayTeam: seeds.rank5, homeSeed: '#4', awaySeed: '#5', winner: barrage2Winner },
+        demi1: { id: 'demi1', label: 'Demi-finale 1', homeTeam: seeds.rank1, awayTeam: barrage2Winner, homeSeed: '#1', awaySeed: barrage2Winner ? (barrage2Winner === seeds.rank4 ? '#4' : '#5') : null, winner: demi1Winner },
+        demi2: { id: 'demi2', label: 'Demi-finale 2', homeTeam: seeds.rank2, awayTeam: barrage1Winner, homeSeed: '#2', awaySeed: barrage1Winner ? (barrage1Winner === seeds.rank3 ? '#3' : '#6') : null, winner: demi2Winner },
+        finale: { id: 'finale', label: 'Finale', homeTeam: demi1Winner, awayTeam: demi2Winner, homeSeed: demi1Winner ? (demi1Winner === seeds.rank1 ? '#1' : (demi1Winner === seeds.rank4 ? '#4' : '#5')) : null, awaySeed: demi2Winner ? (demi2Winner === seeds.rank2 ? '#2' : (demi2Winner === seeds.rank3 ? '#3' : '#6')) : null, winner: finaleWinner }
+    };
+}
+
+function sanitizePlayoffPredictions(standings = getProjectedStandings()) {
+    const bracket = getPlayoffBracket(standings);
+    if (!bracket) {
+        return;
+    }
+
+    const isValidWinner = (winner, homeTeam, awayTeam) => winner && [homeTeam, awayTeam].includes(winner);
+
+    if (!isValidWinner(playoffPredictions.barrage1, bracket.barrage1.homeTeam, bracket.barrage1.awayTeam)) {
+        playoffPredictions.barrage1 = null;
+    }
+
+    if (!isValidWinner(playoffPredictions.barrage2, bracket.barrage2.homeTeam, bracket.barrage2.awayTeam)) {
+        playoffPredictions.barrage2 = null;
+    }
+
+    const updatedBracket = getPlayoffBracket(standings);
+
+    if (!isValidWinner(playoffPredictions.demi1, updatedBracket.demi1.homeTeam, updatedBracket.demi1.awayTeam)) {
+        playoffPredictions.demi1 = null;
+    }
+
+    if (!isValidWinner(playoffPredictions.demi2, updatedBracket.demi2.homeTeam, updatedBracket.demi2.awayTeam)) {
+        playoffPredictions.demi2 = null;
+    }
+
+    const finalBracket = getPlayoffBracket(standings);
+
+    if (!isValidWinner(playoffPredictions.finale, finalBracket.finale.homeTeam, finalBracket.finale.awayTeam)) {
+        playoffPredictions.finale = null;
+    }
+}
+
+function escapeAttr(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function renderPlayoffTeam(match, teamName, seedLabel = null) {
+    const isEmpty = !teamName;
+    const isWinner = !!teamName && match.winner === teamName;
+    const classes = ['playoff-team'];
+
+    if (isWinner) classes.push('is-winner');
+    if (isEmpty) classes.push('is-empty');
+
+    const onclick = isEmpty ? '' : `onclick="handlePlayoffPick('${match.id}', '${escapeAttr(teamName)}')"`;
+    const seed = seedLabel ? `<span class="playoff-seed">${seedLabel}</span>` : '';
+    const content = teamName ? `<span class="playoff-team-line">${seed}<span class="playoff-team-name">${teamName}</span></span>` : 'À déterminer';
+
+    return `<button class="${classes.join(' ')}" ${isEmpty ? 'disabled' : ''} ${onclick}>${content}</button>`;
+}
+
+function renderPlayoffMatch(match) {
+    return `
+        <div class="playoff-match">
+            <div class="playoff-match-title">${match.label}</div>
+            ${renderPlayoffTeam(match, match.homeTeam, match.homeSeed)}
+            ${renderPlayoffTeam(match, match.awayTeam, match.awaySeed)}
+        </div>
+    `;
+}
+
+function renderPlayoffs(bracket = getPlayoffBracket()) {
+    const container = document.getElementById('playoffs-bracket');
+    if (!container) {
+        return;
+    }
+
+    if (!bracket) {
+        container.innerHTML = '<p>Phase finale indisponible.</p>';
+        return;
+    }
+
+    const championMarkup = bracket.finale.winner
+        ? `<div class="virtual-champion">Champion Virtuel : ${bracket.finale.winner}</div>`
+        : '';
+
+    container.innerHTML = `
+        <div class="playoff-column">
+            <h3>Barrages</h3>
+            ${renderPlayoffMatch(bracket.barrage1)}
+            ${renderPlayoffMatch(bracket.barrage2)}
+        </div>
+        <div class="playoff-column">
+            <h3>Demies</h3>
+            ${renderPlayoffMatch(bracket.demi1)}
+            ${renderPlayoffMatch(bracket.demi2)}
+        </div>
+        <div class="playoff-column playoff-column-final">
+            <h3>Finale</h3>
+            ${renderPlayoffMatch(bracket.finale)}
+            ${championMarkup}
+        </div>
+    `;
+}
+
+function handlePlayoffPick(matchId, teamName) {
+    playoffPredictions[matchId] = playoffPredictions[matchId] === teamName ? null : teamName;
+    const projectedStandings = getProjectedStandings();
+    sanitizePlayoffPredictions(projectedStandings);
+    renderPlayoffs(getPlayoffBracket(projectedStandings));
 }
 
 function renderMatches() {
@@ -258,10 +446,15 @@ function handlePredict(rIdx, mIdx, side, value) {
         }
     }
 
+    const projectedStandings = getProjectedStandings();
+    sanitizePlayoffPredictions(projectedStandings);
     renderMatches();
-    renderRankings();
+    renderRankings(projectedStandings);
+    renderPlayoffs(getPlayoffBracket(projectedStandings));
 }
 
+
 window.handlePredict = handlePredict;
+window.handlePlayoffPick = handlePlayoffPick;
 
 loadData();

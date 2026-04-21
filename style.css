@@ -1,20 +1,43 @@
 :root {
-    --bg: #e0e0e0;
-    --shadow-dark: #bebebe;
-    --shadow-light: #ffffff;
-    --text: #444;
     --accent: #cba052;
     --q-direct: #3e8a34;
     --q-playoff: #76ba1b;
     --q-orange: #ff9800;
     --q-red: #e91e63;
- }
- body.dark-mode {
+}
+
+/* Light mode by default */
+body {
+    --bg: #e0e0e0;
+    --shadow-dark: #bebebe;
+    --shadow-light: #ffffff;
+    --text: #444;
+}
+
+/* Dark mode: system preference */
+@media (prefers-color-scheme: dark) {
+    body {
+        --bg: #2c2c2c;
+        --shadow-dark: #1a1a1a;
+        --shadow-light: #3e3e3e;
+        --text: #ddd;
+    }
+}
+
+/* Manual overrides via JS */
+body.dark-mode {
     --bg: #2c2c2c;
     --shadow-dark: #1a1a1a;
     --shadow-light: #3e3e3e;
     --text: #ddd;
- }
+}
+
+body.light-mode {
+    --bg: #e0e0e0;
+    --shadow-dark: #bebebe;
+    --shadow-light: #ffffff;
+    --text: #444;
+}
  body {
     background-color: var(--bg);
     color: var(--text);
@@ -135,3 +158,197 @@
  }
  input:checked + .slider:before { transform: translateX(26px); background-color: var(--accent); }
  
+
+.playoffs-section {
+    margin: 0 auto 28px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background: var(--bg);
+    box-shadow: 10px 10px 20px var(--shadow-dark),
+                -10px -10px 20px var(--shadow-light);
+    max-width: 980px;
+}
+
+.playoffs-section h2 {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.playoffs-note {
+    margin-bottom: 18px;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.playoffs-bracket {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.playoff-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.playoff-column h3 {
+    margin: 0;
+    text-align: center;
+}
+
+.playoff-column-final {
+    align-self: center;
+}
+
+.playoff-match {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(127, 127, 127, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.playoff-match-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.playoff-team {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.06);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.playoff-team:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.playoff-team.is-winner {
+    border-color: #cba052;
+    box-shadow: 0 0 0 3px rgba(242, 201, 76, 0.18);
+    background: rgba(242, 201, 76, 0.12);
+    font-weight: 700;
+}
+
+.playoff-team.is-empty,
+.playoff-team:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+@media (max-width: 900px) {
+    .playoffs-bracket {
+        grid-template-columns: 1fr;
+    }
+
+    .playoff-column-final {
+        align-self: stretch;
+    }
+}
+
+
+.playoff-team-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.playoff-seed {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.08);
+    color: var(--accent);
+}
+
+.playoff-team-name {
+    flex: 1;
+}
+
+.virtual-champion {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(203, 160, 82, 0.12);
+    border: 1px solid rgba(203, 160, 82, 0.25);
+}
+
+
+.neumo-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: 6px 6px 12px var(--shadow-dark),
+                -6px -6px 12px var(--shadow-light);
+}
+
+.theme-icon {
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--text);
+    opacity: 0.65;
+    transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+/* Default (light) */
+body .sun-icon,
+body.light-mode .sun-icon {
+    opacity: 1;
+    color: var(--accent);
+    transform: scale(1.08);
+}
+body .moon-icon,
+body.light-mode .moon-icon {
+    opacity: 0.45;
+}
+
+/* Dark (system) */
+@media (prefers-color-scheme: dark) {
+    body:not(.light-mode) .moon-icon {
+        opacity: 1;
+        color: var(--accent);
+        transform: scale(1.08);
+    }
+    body:not(.light-mode) .sun-icon {
+        opacity: 0.45;
+    }
+}
+
+/* Dark (manual) */
+body.dark-mode .moon-icon {
+    opacity: 1;
+    color: var(--accent);
+    transform: scale(1.08);
+}
+body.dark-mode .sun-icon {
+    opacity: 0.45;
+}
+
+.mode-label {
+    display: none;
+}

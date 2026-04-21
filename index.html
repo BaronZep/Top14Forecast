@@ -8,14 +8,19 @@
 </head>
 <body>
 <div class="top-bar">
-<div class="mode-toggle">
-<span class="mode-label">Dark Mode</span>
-<label class="switch">
-<input type="checkbox" id="dark-mode-toggle">
-<span class="slider"></span>
-</label>
+<div class="mode-toggle neumo-theme-toggle">
+  <span class="theme-icon sun-icon" aria-hidden="true">☀</span>
+  <label class="switch" aria-label="Basculer le thème">
+    <input type="checkbox" id="dark-mode-toggle">
+    <span class="slider"></span>
+  </label>
+  <span class="theme-icon moon-icon" aria-hidden="true">☾</span>
 </div>
 </div>
+<section class="playoffs-section">
+      <div id="playoffs-bracket" class="playoffs-bracket"></div>
+    </section>
+
 <div class="main-layout">
 <section class="column">
 <div class="neumo-card">
@@ -32,16 +37,22 @@
 </div>
 </section>
 <section class="column">
-<div class="nav-container">
-<button id="prev-btn" class="neumo-btn">←</button>
-<div id="round-label" class="neumo-inset">Journée --</div>
-<button id="next-btn" class="neumo-btn">→</button>
-</div>
-<div class="neumo-card" id="matches-section">
-<div id="matches-list"></div>
-</div>
+  <div class="neumo-card" id="journees-section">
+    <div class="nav-container">
+      <button id="prev-btn" class="neumo-btn">←</button>
+      <div id="round-label" class="neumo-inset">Journée --</div>
+      <button id="next-btn" class="neumo-btn">→</button>
+    </div>
+
+    <div id="matches-section">
+      <div id="matches-list"></div>
+    </div>
+  </div>
 </section>
 </div>
 <script src="script.js" defer></script>
+
+    
+
 </body>
 </html>
