@@ -244,30 +244,89 @@ function getPlayoffBracket(standings = getProjectedStandings()) {
         rank6: top6[5]?.name ?? null
     };
 
-    const barrage1Participants = [seeds.rank3, seeds.rank6].filter(Boolean);
-    const barrage2Participants = [seeds.rank4, seeds.rank5].filter(Boolean);
+    const barrage1Participants = [seeds.rank4, seeds.rank5].filter(Boolean);
+    const barrage2Participants = [seeds.rank3, seeds.rank6].filter(Boolean);
 
-    const barrage1Winner = barrage1Participants.includes(playoffPredictions.barrage1) ? playoffPredictions.barrage1 : null;
-    const barrage2Winner = barrage2Participants.includes(playoffPredictions.barrage2) ? playoffPredictions.barrage2 : null;
+    const barrage1Winner = barrage1Participants.includes(playoffPredictions.barrage1)
+        ? playoffPredictions.barrage1
+        : null;
 
-    const demi1Participants = [seeds.rank1, barrage2Winner].filter(Boolean);
-    const demi2Participants = [seeds.rank2, barrage1Winner].filter(Boolean);
+    const barrage2Winner = barrage2Participants.includes(playoffPredictions.barrage2)
+        ? playoffPredictions.barrage2
+        : null;
 
-    const demi1Winner = demi1Participants.includes(playoffPredictions.demi1) ? playoffPredictions.demi1 : null;
-    const demi2Winner = demi2Participants.includes(playoffPredictions.demi2) ? playoffPredictions.demi2 : null;
+    const demi1Participants = [seeds.rank1, barrage1Winner].filter(Boolean);
+    const demi2Participants = [seeds.rank2, barrage2Winner].filter(Boolean);
+
+    const demi1Winner = demi1Participants.includes(playoffPredictions.demi1)
+        ? playoffPredictions.demi1
+        : null;
+
+    const demi2Winner = demi2Participants.includes(playoffPredictions.demi2)
+        ? playoffPredictions.demi2
+        : null;
 
     const finaleParticipants = [demi1Winner, demi2Winner].filter(Boolean);
-    const finaleWinner = finaleParticipants.includes(playoffPredictions.finale) ? playoffPredictions.finale : null;
+    const finaleWinner = finaleParticipants.includes(playoffPredictions.finale)
+        ? playoffPredictions.finale
+        : null;
 
     return {
-        barrage1: { id: 'barrage1', label: 'Barrage 1', homeTeam: seeds.rank3, awayTeam: seeds.rank6, homeSeed: '#3', awaySeed: '#6', winner: barrage1Winner },
-        barrage2: { id: 'barrage2', label: 'Barrage 2', homeTeam: seeds.rank4, awayTeam: seeds.rank5, homeSeed: '#4', awaySeed: '#5', winner: barrage2Winner },
-        demi1: { id: 'demi1', label: 'Demi-finale 1', homeTeam: seeds.rank1, awayTeam: barrage2Winner, homeSeed: '#1', awaySeed: barrage2Winner ? (barrage2Winner === seeds.rank4 ? '#4' : '#5') : null, winner: demi1Winner },
-        demi2: { id: 'demi2', label: 'Demi-finale 2', homeTeam: seeds.rank2, awayTeam: barrage1Winner, homeSeed: '#2', awaySeed: barrage1Winner ? (barrage1Winner === seeds.rank3 ? '#3' : '#6') : null, winner: demi2Winner },
-        finale: { id: 'finale', label: 'Finale', homeTeam: demi1Winner, awayTeam: demi2Winner, homeSeed: demi1Winner ? (demi1Winner === seeds.rank1 ? '#1' : (demi1Winner === seeds.rank4 ? '#4' : '#5')) : null, awaySeed: demi2Winner ? (demi2Winner === seeds.rank2 ? '#2' : (demi2Winner === seeds.rank3 ? '#3' : '#6')) : null, winner: finaleWinner }
+        barrage1: {
+            id: 'barrage1',
+            label: 'Barrage 1',
+            homeTeam: seeds.rank4,
+            awayTeam: seeds.rank5,
+            homeSeed: '#4',
+            awaySeed: '#5',
+            winner: barrage1Winner
+        },
+        barrage2: {
+            id: 'barrage2',
+            label: 'Barrage 2',
+            homeTeam: seeds.rank3,
+            awayTeam: seeds.rank6,
+            homeSeed: '#3',
+            awaySeed: '#6',
+            winner: barrage2Winner
+        },
+        demi1: {
+            id: 'demi1',
+            label: 'Demi-finale 1',
+            homeTeam: seeds.rank1,
+            awayTeam: barrage1Winner,
+            homeSeed: '#1',
+            awaySeed: barrage1Winner
+                ? (barrage1Winner === seeds.rank4 ? '#4' : '#5')
+                : null,
+            winner: demi1Winner
+        },
+        demi2: {
+            id: 'demi2',
+            label: 'Demi-finale 2',
+            homeTeam: seeds.rank2,
+            awayTeam: barrage2Winner,
+            homeSeed: '#2',
+            awaySeed: barrage2Winner
+                ? (barrage2Winner === seeds.rank3 ? '#3' : '#6')
+                : null,
+            winner: demi2Winner
+        },
+        finale: {
+            id: 'finale',
+            label: 'Finale',
+            homeTeam: demi1Winner,
+            awayTeam: demi2Winner,
+            homeSeed: demi1Winner
+                ? (demi1Winner === seeds.rank1 ? '#1' : (demi1Winner === seeds.rank4 ? '#4' : '#5'))
+                : null,
+            awaySeed: demi2Winner
+                ? (demi2Winner === seeds.rank2 ? '#2' : (demi2Winner === seeds.rank3 ? '#3' : '#6'))
+                : null,
+            winner: finaleWinner
+        }
     };
 }
-
 function sanitizePlayoffPredictions(standings = getProjectedStandings()) {
     const bracket = getPlayoffBracket(standings);
     if (!bracket) {
