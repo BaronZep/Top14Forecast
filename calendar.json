@@ -273,18 +273,6 @@
     ]
   },
   {
-    "round": 21,
-    "matches": [
-      {"homeTeam": "ASM Clermont", "awayTeam": "LOU Rugby", "homePts": 5, "awayPts": 0},
-      {"homeTeam": "Aviron Bayonnais", "awayTeam": "Section Paloise", "homePts": 0, "awayPts": 5},
-      {"homeTeam": "Castres Olympique", "awayTeam": "Stade Toulousain", "homePts": 0, "awayPts": 5},
-      {"homeTeam": "Montpellier Hérault Rugby", "awayTeam": "USA Perpignan", "homePts": 4, "awayPts": 0},
-      {"homeTeam": "Racing 92", "awayTeam": "Stade Français Paris", "homePts": 5, "awayPts": 0},
-      {"homeTeam": "Stade Rochelais", "awayTeam": "Union Bordeaux-Bègles", "homePts": 5, "awayPts": 0},
-      {"homeTeam": "US Montauban", "awayTeam": "RC Toulon", "homePts": 0, "awayPts": 5}
-    ]
-  },
-  {
     "round": 22,
     "matches": [
       {"homeTeam": "Stade Toulousain", "awayTeam": "ASM Clermont", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
