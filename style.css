@@ -326,7 +326,7 @@ tr {
 }
 
 .playoff-team.is-winner {
-    border-color: #f2c94c;
+    border-color: #cba052;
     box-shadow: 0 0 0 3px rgba(242, 201, 76, 0.18);
     background: rgba(242, 201, 76, 0.12);
     font-weight: 700;
