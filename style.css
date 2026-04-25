@@ -38,46 +38,69 @@ body.light-mode {
     --shadow-light: #ffffff;
     --text: #444;
 }
- body {
+
+body {
     background-color: var(--bg);
     color: var(--text);
     font-family: 'Segoe UI', system-ui, sans-serif;
     margin: 0;
     padding: 20px;
     transition: background 0.3s ease;
- }
- .top-bar {
+}
+
+.top-bar {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
- }
- .main-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 30px;
+}
+
+.main-layout {
+    display: flex;
+    justify-content: center;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
- }
- .neumo-card {
+}
+
+.column {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.neumo-card {
     background: var(--bg);
     border-radius: 20px;
     box-shadow: 10px 10px 20px var(--shadow-dark),
                 -10px -10px 20px var(--shadow-light);
     padding: 20px;
- }
- .neumo-inset {
+}
+
+.neumo-inset {
     background: var(--bg);
     border-radius: 12px;
     box-shadow: inset 4px 4px 8px var(--shadow-dark),
                 inset -4px -4px 8px var(--shadow-light);
     padding: 10px 20px;
     font-weight: bold;
- }
- table { width: 100%; border-collapse: collapse; }
- th, td { padding: 12px 8px; text-align: center; }
- tr { border-bottom: 1px solid rgba(0,0,0,0.05); }
- /* Couleurs de positions */
- .pos-badge {
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 8px;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Couleurs de positions */
+.pos-badge {
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -85,26 +108,28 @@ body.light-mode {
     border-radius: 8px;
     font-weight: bold;
     text-align: center;
-    /* L'effet Neumorphique : la forme sort du fond */
     background: var(--bg);
     box-shadow: 3px 3px 6px var(--shadow-dark),
                 -3px -3px 6px var(--shadow-light);
-    /* On change la couleur du texte au lieu du fond */
     transition: 0.3s;
- }
+}
+
 .p-direct { color: var(--q-direct); border: 3px solid rgba(63, 128, 54, 0.2); }
 .p-playoff { color: var(--q-playoff); border: 3px solid rgba(118, 186, 27, 0.2); }
 .p-access { color: var(--q-orange); border: 3px solid rgba(255, 152, 0, 0.2); }
 .p-releg { color: var(--q-red); border: 3px solid rgba(233, 30, 99, 0.2); }
+.p-neutral { color: var(--text); background: none; }
 
- .p-neutral { color: var(--text); background: none; }
- .nav-container {
+.nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
- }
- .neumo-btn {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+}
+
+.neumo-btn {
     border: none;
     background: var(--bg);
     padding: 12px 20px;
@@ -114,25 +139,51 @@ body.light-mode {
     cursor: pointer;
     color: var(--text);
     font-weight: bold;
- }
- .neumo-btn:active {
+}
+
+.neumo-btn:active {
     box-shadow: inset 3px 3px 6px var(--shadow-dark),
                 inset -3px -3px 6px var(--shadow-light);
- }
- .match-row {
-    display: flex;
+}
+
+#matches-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#matches-list {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.match-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: space-between;
+    column-gap: 12px;
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 15px;
     box-shadow: 3px 3px 8px var(--shadow-dark),
                 -3px -3px 8px var(--shadow-light);
- }
- .team-name { flex: 1; font-size: 0.85rem; font-weight: 500; }
- .team-home { text-align: right; margin-right: 10px; }
- .team-away { text-align: left; margin-left: 10px; }
- .score-selector {
+}
+
+.team-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-width: 0;
+}
+
+.team-home {
+    text-align: right;
+}
+
+.team-away {
+    text-align: left;
+}
+
+.score-selector {
     background: var(--bg);
     border: none;
     border-radius: 6px;
@@ -141,8 +192,7 @@ body.light-mode {
     padding: 4px;
     color: var(--accent);
     font-weight: bold;
- }
- 
+}
 
 .playoffs-section {
     margin: 0 auto 28px;
@@ -244,7 +294,6 @@ body.light-mode {
     }
 }
 
-
 .playoff-team-line {
     display: flex;
     align-items: center;
@@ -279,7 +328,6 @@ body.light-mode {
     background: rgba(203, 160, 82, 0.12);
     border: 1px solid rgba(203, 160, 82, 0.25);
 }
-
 
 .neumo-theme-toggle {
     display: inline-flex;
@@ -346,7 +394,6 @@ body.light-mode {
     display: block;
 }
 
-
 /* ── Interlude card ── */
 .interlude-card {
     display: flex;
@@ -372,4 +419,86 @@ body.light-mode {
     font-size: 1rem;
     opacity: 0.8;
     line-height: 1.6;
+}
+
+/* ── Monte-Carlo ── */
+.mc-card {
+    margin-top: 24px;
+}
+
+.mc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mc-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.mc-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 2rem 0;
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+@keyframes mc-spin {
+    to { transform: rotate(360deg); }
+}
+
+.mc-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: mc-spin 0.7s linear infinite;
+}
+
+.mc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.mc-table th,
+.mc-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border, rgba(0,0,0,0.08));
+}
+
+.mc-table thead th {
+    font-weight: 600;
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+.pct-zero {
+    opacity: 0.25;
+}
+
+.pct-certain {
+    color: var(--accent, #4caf50);
+    font-weight: 700;
+}
+
+.pct-high {
+    font-weight: 700;
+}
+
+.pct-mid {
+    opacity: 0.85;
+}
+
+.pct-low {
+    opacity: 0.55;
 }

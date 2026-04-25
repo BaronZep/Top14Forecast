@@ -2,6 +2,7 @@ let standingsData = [];
 let calendarData = [];
 let currentRoundIdx = 0;
 let userPredictions = {};
+let monteCarloResults = null;
 let playoffPredictions = {
     barrage1: null,
     barrage2: null,
@@ -94,9 +95,9 @@ function updateDisplay() {
     sanitizePlayoffPredictions(projectedStandings);
     const playoffBracket = getPlayoffBracket(projectedStandings);
 
-    renderRankings(projectedStandings);
     renderMatches();
     renderPlayoffs(playoffBracket);
+    renderMonteCarloResults();
     const currentEntry = calendarData[currentRoundIdx];
     document.getElementById('round-label').innerText = currentEntry.interlude
         ? currentEntry.title
@@ -175,25 +176,6 @@ function getProjectedStandings() {
     });
 
     return live;
-}
-
-function renderRankings(live = getProjectedStandings()) {
-    const body = document.getElementById('rankings-body');
-
-    body.innerHTML = live.map((team, i) => {
-        let cls = 'p-neutral';
-
-        if (i < 2) cls = 'p-direct';
-        else if (i < 6) cls = 'p-playoff';
-        else if (i === 12) cls = 'p-access';
-        else if (i === 13) cls = 'p-releg';
-
-        return `<tr>
-            <td><span class="pos-badge ${cls}">${i + 1}</span></td>
-            <td style="text-align: left;">${team.name}</td>
-            <td><strong>${team.points}</strong></td>
-        </tr>`;
-    }).join('');
 }
 
 function calculateHeadToHead(teamA, teamB) {
@@ -405,7 +387,7 @@ function renderMatches() {
 
         return `<div class="match-row">
             <span class="team-name team-home">${match.homeTeam}</span>
-            <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center; justify-content: center;">
                 ${isFuture ? renderSelect(currentRoundIdx, mIdx, 'home') : `<span class="fixed-score">${match.homePts}</span>`}
                 <span>-</span>
                 ${isFuture ? renderSelect(currentRoundIdx, mIdx, 'away') : `<span class="fixed-score">${match.awayPts}</span>`}
@@ -469,12 +451,180 @@ function handlePredict(rIdx, mIdx, side, value) {
     const projectedStandings = getProjectedStandings();
     sanitizePlayoffPredictions(projectedStandings);
     renderMatches();
-    renderRankings(projectedStandings);
     renderPlayoffs(getPlayoffBracket(projectedStandings));
 }
 
 
+
+// ─────────────────────────────────────────────
+//  MONTE-CARLO SIMULATION
+// ─────────────────────────────────────────────
+
+const MC_OUTCOMES = [
+    [4, 0], [4, 1], [5, 0], [5, 1],
+    [0, 4], [1, 4], [0, 5], [1, 5],
+    [2, 2]
+];
+
+function runMonteCarloSimulations(N = 100000) {
+    const teamNames = standingsData.map(t => t.name);
+    const teamIdx = {};
+    teamNames.forEach((name, i) => teamIdx[name] = i);
+    const T = teamNames.length;
+
+    const fixedMatches = [];
+    const pendingMatches = [];
+
+    calendarData.forEach((round, rIdx) => {
+        if (round.interlude) return;
+        round.matches.forEach((match, mIdx) => {
+            const hi = teamIdx[match.homeTeam];
+            const ai = teamIdx[match.awayTeam];
+            if (hi === undefined || ai === undefined) return;
+
+            if (match.homePts !== null && match.awayPts !== null) {
+                fixedMatches.push({ hi, ai, hp: match.homePts, ap: match.awayPts });
+            } else {
+                const pred = getMatchPrediction(rIdx, mIdx);
+                if (pred) fixedMatches.push({ hi, ai, hp: pred.homePts, ap: pred.awayPts });
+                else pendingMatches.push({ hi, ai });
+            }
+        });
+    });
+
+    const basePoints = standingsData.map(t => t.points);
+    const fixedDelta = new Int32Array(T);
+    const fixedH2H = new Int32Array(T * T);
+
+    fixedMatches.forEach(({ hi, ai, hp, ap }) => {
+        fixedDelta[hi] += hp;
+        fixedDelta[ai] += ap;
+        fixedH2H[hi * T + ai] += hp;
+        fixedH2H[ai * T + hi] += ap;
+    });
+
+    const startPts = basePoints.map((p, i) => p + fixedDelta[i]);
+
+    const cntTop2 = new Int32Array(T);
+    const cntBarragiste = new Int32Array(T);
+    const cnt13 = new Int32Array(T);
+    const cnt14 = new Int32Array(T);
+
+    const nPending = pendingMatches.length;
+    const simH2H = new Int32Array(T * T);
+    const simPts = new Float64Array(T);
+    const order = Array.from({ length: T }, (_, i) => i);
+
+    for (let sim = 0; sim < N; sim++) {
+        for (let i = 0; i < T; i++) simPts[i] = startPts[i];
+        simH2H.set(fixedH2H);
+
+        for (let j = 0; j < nPending; j++) {
+            const { hi, ai } = pendingMatches[j];
+            const [hp, ap] = MC_OUTCOMES[(Math.random() * 9) | 0];
+            simPts[hi] += hp;
+            simPts[ai] += ap;
+            simH2H[hi * T + ai] += hp;
+            simH2H[ai * T + hi] += ap;
+        }
+
+        for (let i = 0; i < T; i++) order[i] = i;
+        order.sort((a, b) => {
+            const diff = simPts[b] - simPts[a];
+            if (diff !== 0) return diff;
+            return simH2H[b * T + a] - simH2H[a * T + b];
+        });
+
+        for (let pos = 0; pos < T; pos++) {
+            const ti = order[pos];
+            if (pos < 2) cntTop2[ti]++;
+            if (pos >= 2 && pos < 6) cntBarragiste[ti]++;
+            if (pos === 12) cnt13[ti]++;
+            if (pos === 13) cnt14[ti]++;
+        }
+    }
+
+    const results = {};
+    teamNames.forEach((name, i) => {
+        results[name] = {
+            top2: +(cntTop2[i] / N * 100).toFixed(1),
+            barragiste: +(cntBarragiste[i] / N * 100).toFixed(1),
+            pos13: +(cnt13[i] / N * 100).toFixed(1),
+            pos14: +(cnt14[i] / N * 100).toFixed(1)
+        };
+    });
+
+    return results;
+}
+
+function formatPct(pct) {
+    if (pct === 0) return `<span class="pct-zero">—</span>`;
+    if (pct === 100) return `<span class="pct-certain">✓</span>`;
+    const cls = pct >= 50 ? 'pct-high' : pct >= 15 ? 'pct-mid' : 'pct-low';
+    return `<span class="${cls}">${pct}%</span>`;
+}
+
+function renderMonteCarloResults(results = monteCarloResults) {
+    const section = document.getElementById('montecarlo-section');
+    if (!section) return;
+
+    const standings = getProjectedStandings();
+
+    section.innerHTML = `
+        <table class="mc-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="text-align:left">Équipe</th>
+                    <th>Pts</th>
+                    <th title="Places 1-2 — Demi-finale directe">Demi-finaliste direct</th>
+                    <th title="Places 3-6 — Barrages">Barragiste</th>
+                    <th title="13e — Barrage relégation">13e</th>
+                    <th title="14e — Relégation directe">14e</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${standings.map((team, i) => {
+                    const r = results?.[team.name];
+                    let cls = 'p-neutral';
+                    if (i < 2) cls = 'p-direct';
+                    else if (i < 6) cls = 'p-playoff';
+                    else if (i === 12) cls = 'p-access';
+                    else if (i === 13) cls = 'p-releg';
+                    return `<tr>
+                        <td><span class="pos-badge ${cls}">${i + 1}</span></td>
+                        <td style="text-align:left">${team.name}</td>
+                        <td><strong>${team.points}</strong></td>
+                        <td>${r ? formatPct(r.top2) : '<span class="pct-zero">—</span>'}</td>
+                        <td>${r ? formatPct(r.barragiste) : '<span class="pct-zero">—</span>'}</td>
+                        <td>${r ? formatPct(r.pos13) : '<span class="pct-zero">—</span>'}</td>
+                        <td>${r ? formatPct(r.pos14) : '<span class="pct-zero">—</span>'}</td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+        </table>`;
+}
+
+async function handleRunSimulation() {
+    const btn = document.getElementById('mc-run-btn');
+    const section = document.getElementById('montecarlo-section');
+    if (!btn || !section) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Calcul en cours…';
+    section.innerHTML = `<div class="mc-loading"><div class="mc-spinner"></div><span>100 000 simulations…</span></div>`;
+
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    monteCarloResults = runMonteCarloSimulations(100000);
+    renderMonteCarloResults();
+
+    btn.textContent = 'Recalculer';
+    btn.disabled = false;
+}
+
 window.handlePredict = handlePredict;
 window.handlePlayoffPick = handlePlayoffPick;
+window.handleRunSimulation = handleRunSimulation;
 
 loadData();

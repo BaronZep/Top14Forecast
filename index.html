@@ -34,20 +34,6 @@
 
 <div class="main-layout">
 <section class="column">
-<div class="neumo-card">
-<table id="rankings-table">
-<thead>
-<tr>
-<th>Pos</th>
-<th style="text-align: left;">Équipe</th>
-<th>Pts</th>
-</tr>
-</thead>
-<tbody id="rankings-body"></tbody>
-</table>
-</div>
-</section>
-<section class="column">
 <div class="nav-container">
 <button id="prev-btn" class="neumo-btn">←</button>
 <div id="round-label" class="neumo-inset">Journée --</div>
@@ -61,6 +47,15 @@
 <script src="script.js" defer></script>
 
     
+
+
+<section class="neumo-card mc-card">
+  <div class="mc-header">
+    <h2>Probabilités de fin de saison</h2>
+    <button id="mc-run-btn" class="neumo-btn mc-btn" onclick="handleRunSimulation()">Calculer (100 000 simulations équiprobables)</button>
+  </div>
+  <div id="montecarlo-section" class="mc-body"></div>
+</section>
 
 </body>
 </html>
