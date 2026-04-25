@@ -8,54 +8,55 @@
 </head>
 <body>
 <div class="top-bar">
-<div class="neumo-theme-toggle">
-  <div class="theme-slider inset" id="themeToggle"
-    role="switch" aria-checked="false" tabindex="0"
-    aria-label="Basculer le thème clair/sombre">
-    <span class="theme-thumb raised"></span>
-    <span class="theme-label theme-light" aria-hidden="true">
-      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-      </svg>
-    </span>
-    <span class="theme-label theme-dark" aria-hidden="true">
-      <svg class="theme-icon" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3c0 .31.02.62.05.92A7 7 0 0 0 20.08 12c.3.03.61.05.92.05z"></path>
-      </svg>
-    </span>
+  <div class="neumo-theme-toggle">
+    <div class="theme-slider inset" id="themeToggle"
+      role="switch" aria-checked="false" tabindex="0"
+      aria-label="Basculer le thème clair/sombre">
+      <span class="theme-thumb raised"></span>
+      <span class="theme-label theme-light" aria-hidden="true">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+      </span>
+      <span class="theme-label theme-dark" aria-hidden="true">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3c0 .31.02.62.05.92A7 7 0 0 0 20.08 12c.3.03.61.05.92.05z"></path>
+        </svg>
+      </span>
+    </div>
   </div>
 </div>
-</div>
+
 <section class="playoffs-section">
-      <h2>Phases finales prévues</h2>
-      <div id="playoffs-bracket" class="playoffs-bracket"></div>
-    </section>
+  <h2>Phases finales prévues</h2>
+  <div id="playoffs-bracket" class="playoffs-bracket"></div>
+</section>
 
 <div class="main-layout">
-<section class="column">
-<div class="nav-container">
-<button id="prev-btn" class="neumo-btn">←</button>
-<div id="round-label" class="neumo-inset">Journée --</div>
-<button id="next-btn" class="neumo-btn">→</button>
-</div>
-<div class="neumo-card" id="matches-section">
-<div id="matches-list"></div>
-</div>
-</section>
-</div>
-<script src="script.js" defer></script>
+  <section class="column">
+    <div class="neumo-card matches-card-shell">
+      <div class="nav-container">
+        <button id="prev-btn" class="neumo-btn nav-btn" aria-label="Journée précédente">←</button>
+        <div id="round-label" class="neumo-inset">Journée --</div>
+        <button id="next-btn" class="neumo-btn nav-btn" aria-label="Journée suivante">→</button>
+      </div>
 
-    
-
+      <div id="matches-section">
+        <div id="matches-list"></div>
+      </div>
+    </div>
+  </section>
+</div>
 
 <section class="neumo-card mc-card">
   <div class="mc-header">
     <h2>Probabilités de fin de saison</h2>
-    <button id="mc-run-btn" class="neumo-btn mc-btn" onclick="handleRunSimulation()">Calculer (100 000 simulations équiprobables)</button>
+    <button id="mc-run-btn" class="neumo-btn mc-btn" onclick="handleRunSimulation()">Calculer (100 000 simulations)</button>
   </div>
   <div id="montecarlo-section" class="mc-body"></div>
 </section>
 
+<script src="script.js" defer></script>
 </body>
 </html>

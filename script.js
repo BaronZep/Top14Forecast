@@ -387,7 +387,7 @@ function renderMatches() {
 
         return `<div class="match-row">
             <span class="team-name team-home">${match.homeTeam}</span>
-            <div style="display: flex; gap: 8px; align-items: center; justify-content: center;">
+            <div class="score-block">
                 ${isFuture ? renderSelect(currentRoundIdx, mIdx, 'home') : `<span class="fixed-score">${match.homePts}</span>`}
                 <span>-</span>
                 ${isFuture ? renderSelect(currentRoundIdx, mIdx, 'away') : `<span class="fixed-score">${match.awayPts}</span>`}

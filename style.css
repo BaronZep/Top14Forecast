@@ -6,6 +6,12 @@
     --q-red: #e91e63;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Light mode by default */
 body {
     --bg: #e0e0e0;
@@ -64,7 +70,7 @@ body {
 
 .column {
     width: 100%;
-    max-width: 900px;
+    max-width: 920px;
     margin: 0 auto;
 }
 
@@ -120,15 +126,6 @@ tr {
 .p-releg { color: var(--q-red); border: 3px solid rgba(233, 30, 99, 0.2); }
 .p-neutral { color: var(--text); background: none; }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 20px auto;
-}
-
 .neumo-btn {
     border: none;
     background: var(--bg);
@@ -146,10 +143,53 @@ tr {
                 inset -3px -3px 6px var(--shadow-light);
 }
 
+.matches-card-shell {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.nav-container {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 52px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.nav-btn {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.nav-container > * {
+    min-width: 0;
+}
+
+#round-label {
+    width: 100%;
+    text-align: center;
+    padding: 14px 18px;
+    font-size: 1rem;
+    border-radius: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #matches-section {
     width: 100%;
-    max-width: 900px;
     margin: 0 auto;
+    padding: 4px 0 0 0;
 }
 
 #matches-list {
@@ -162,7 +202,7 @@ tr {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     column-gap: 12px;
-    padding: 12px;
+    padding: 12px 14px;
     margin-bottom: 12px;
     border-radius: 15px;
     box-shadow: 3px 3px 8px var(--shadow-dark),
@@ -170,7 +210,7 @@ tr {
 }
 
 .team-name {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     font-weight: 500;
     min-width: 0;
 }
@@ -183,15 +223,26 @@ tr {
     text-align: left;
 }
 
-.score-selector {
+.score-block {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.score-selector,
+.fixed-score {
     background: var(--bg);
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     box-shadow: inset 2px 2px 4px var(--shadow-dark),
                 inset -2px -2px 4px var(--shadow-light);
-    padding: 4px;
+    padding: 6px 8px;
     color: var(--accent);
     font-weight: bold;
+    min-width: 36px;
+    text-align: center;
 }
 
 .playoffs-section {
@@ -282,16 +333,6 @@ tr {
 .playoff-team:disabled {
     opacity: 0.5;
     cursor: default;
-}
-
-@media (max-width: 900px) {
-    .playoffs-bracket {
-        grid-template-columns: 1fr;
-    }
-
-    .playoff-column-final {
-        align-self: stretch;
-    }
 }
 
 .playoff-team-line {
@@ -501,4 +542,54 @@ tr {
 
 .pct-low {
     opacity: 0.55;
+}
+
+@media (max-width: 900px) {
+    .playoffs-bracket {
+        grid-template-columns: 1fr;
+    }
+
+    .playoff-column-final {
+        align-self: stretch;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 14px;
+    }
+
+    .matches-card-shell {
+        padding: 12px;
+    }
+
+    .nav-container {
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    #round-label {
+        font-size: 0.95rem;
+        padding: 12px 10px;
+    }
+
+    .match-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .team-home,
+    .team-away {
+        text-align: center;
+    }
+
+    .score-block {
+        order: -1;
+    }
 }
