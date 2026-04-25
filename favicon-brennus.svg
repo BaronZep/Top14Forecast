@@ -1,11 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 3 20 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="5 2 22 27">
+  <!-- support bois -->
   <rect x="7" y="3" width="18" height="26" rx="2.5" fill="#1a1512"/>
   <rect x="8" y="4" width="16" height="24" rx="2" fill="#241d19"/>
 
+  <!-- bouclier central bien rond -->
   <circle cx="16" cy="14" r="6.75" fill="#c8922a"/>
   <circle cx="16" cy="14" r="6.75" fill="none" stroke="#f0cf78" stroke-width="1.1"/>
   <circle cx="16" cy="14" r="2.75" fill="#f4d98f"/>
 
+  <!-- plaque basse -->
   <rect x="10.5" y="22.5" width="11" height="3.25" rx="0.75" fill="#c8922a"/>
   <rect x="10.5" y="22.5" width="11" height="3.25" rx="0.75" fill="none" stroke="#f0cf78" stroke-width="0.5"/>
 </svg>
