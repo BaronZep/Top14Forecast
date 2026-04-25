@@ -8,13 +8,23 @@
 </head>
 <body>
 <div class="top-bar">
-<div class="mode-toggle neumo-theme-toggle">
-  <span class="theme-icon sun-icon" aria-hidden="true">☀</span>
-  <label class="switch" aria-label="Basculer le thème">
-    <input type="checkbox" id="dark-mode-toggle">
-    <span class="slider"></span>
-  </label>
-  <span class="theme-icon moon-icon" aria-hidden="true">☾</span>
+<div class="neumo-theme-toggle">
+  <div class="theme-slider inset" id="themeToggle"
+    role="switch" aria-checked="false" tabindex="0"
+    aria-label="Basculer le thème clair/sombre">
+    <span class="theme-thumb raised"></span>
+    <span class="theme-label theme-light" aria-hidden="true">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+      </svg>
+    </span>
+    <span class="theme-label theme-dark" aria-hidden="true">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3c0 .31.02.62.05.92A7 7 0 0 0 20.08 12c.3.03.61.05.92.05z"></path>
+      </svg>
+    </span>
+  </div>
 </div>
 </div>
 <section class="playoffs-section">
