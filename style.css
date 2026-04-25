@@ -501,16 +501,6 @@ tr {
     overflow-x: auto;
 }
 
-.mc-loading {
-    min-height: 88px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: 0.95rem;
-    opacity: 0.7;
-}
-
 .mc-warning {
     margin: 0 0 12px 0;
     padding: 10px 14px;
@@ -524,6 +514,43 @@ tr {
 
 @keyframes mc-spin {
     to { transform: rotate(360deg); }
+}
+
+.mc-body-shell {
+    width: 100%;
+}
+
+.mc-body {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mc-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(2px);
+    border-radius: 14px;
+}
+
+.mc-overlay-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: 8px 8px 18px var(--shadow-dark),
+                -8px -8px 18px var(--shadow-light);
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .mc-spinner {

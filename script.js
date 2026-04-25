@@ -11,6 +11,7 @@ let playoffPredictions = {
     demi2: null,
     finale: null
 };
+let mcLoading = false;
 
 const SCORE_OPTIONS = [0, 1, 2, 4, 5];
 const SCORE_COMPATIBILITY = {
@@ -689,63 +690,78 @@ function renderMonteCarloResults(results = monteCarloResults) {
         ? `<div class="mc-warning">Pourcentages à recalculer</div>`
         : '';
 
-    section.innerHTML = `
-            ${staleBadge}
-            <table class="mc-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th style="text-align:left">Équipe</th>
-                    <th>Pts</th>
-                    <th title="Places 1-2 — Demi-finale directe">1-2</th>
-                    <th title="Places 1-6 — Qualification en phases finales">1-6</th>
-                    <th title="13e — Barrage relégation">13</th>
-                    <th title="14e — Relégation directe">14</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${standings.map((team, i) => {
-                    const r = monteCarloResultsStale ? null : results?.[team.name];
-                    let cls = 'p-neutral';
-                    if (i < 2) cls = 'p-direct';
-                    else if (i < 6) cls = 'p-playoff';
-                    else if (i === 12) cls = 'p-access';
-                    else if (i === 13) cls = 'p-releg';
+    const overlay = mcLoading
+        ? `<div class="mc-overlay" role="status" aria-live="polite" aria-label="Calcul des probabilités en cours">
+                <div class="mc-overlay-content">
+                    <div class="mc-spinner"></div>
+                    <span>100 000 simulations…</span>
+                </div>
+           </div>`
+        : '';
 
-                    return `<tr>
-                        <td><span class="pos-badge ${cls}">${i + 1}</span></td>
-                        <td style="text-align:left">${team.name}</td>
-                        <td>
-                            <strong>${team.points}</strong>
-                            <span class="pts-breakdown">(${team.points - (deltaMap[team.name] || 0)} + ${deltaMap[team.name] || 0})</span>
-                        </td>
-                        <td>${r ? formatPct(r.top2) : '<span class="pct-zero">…</span>'}</td>
-                        <td>${r ? formatPct(r.top6) : '<span class="pct-zero">…</span>'}</td>
-                        <td>${r ? formatPct(r.pos13) : '<span class="pct-zero">…</span>'}</td>
-                        <td>${r ? formatPct(r.pos14) : '<span class="pct-zero">…</span>'}</td>
-                    </tr>`;
-                }).join('')}
-            </tbody>
-        </table>`;
+    section.innerHTML = `
+        <div class="mc-body-shell" aria-busy="${mcLoading ? 'true' : 'false'}">
+            ${staleBadge}
+            <div class="mc-body">
+                <table class="mc-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th style="text-align:left">Équipe</th>
+                            <th>Pts</th>
+                            <th title="Places 1-2 — Demi-finale directe">1-2</th>
+                            <th title="Places 1-6 — Qualification en phases finales">1-6</th>
+                            <th title="13e — Barrage relégation">13</th>
+                            <th title="14e — Relégation directe">14</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${standings.map((team, i) => {
+                            const r = monteCarloResultsStale ? null : results?.[team.name];
+                            let cls = 'p-neutral';
+                            if (i < 2) cls = 'p-direct';
+                            else if (i < 6) cls = 'p-playoff';
+                            else if (i === 12) cls = 'p-access';
+                            else if (i === 13) cls = 'p-releg';
+
+                            return `<tr>
+                                <td><span class="pos-badge ${cls}">${i + 1}</span></td>
+                                <td style="text-align:left">${team.name}</td>
+                                <td>
+                                    <strong>${team.points}</strong>
+                                    <span class="pts-breakdown">(${team.points - (deltaMap[team.name] || 0)} + ${deltaMap[team.name] || 0})</span>
+                                </td>
+                                <td>${r ? formatPct(r.top2) : '<span class="pct-zero">…</span>'}</td>
+                                <td>${r ? formatPct(r.top6) : '<span class="pct-zero">…</span>'}</td>
+                                <td>${r ? formatPct(r.pos13) : '<span class="pct-zero">…</span>'}</td>
+                                <td>${r ? formatPct(r.pos14) : '<span class="pct-zero">…</span>'}</td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+                ${overlay}
+            </div>
+        </div>`;
 }
 
 async function handleRunSimulation() {
     const btn = document.getElementById('mc-run-btn');
-    const section = document.getElementById('montecarlo-section');
-    if (!btn || !section) return;
+    if (!btn) return;
 
     btn.disabled = true;
     btn.textContent = 'Calcul en cours…';
-    section.innerHTML = `<div class="mc-loading"><div class="mc-spinner"></div><span>100 000 simulations…</span></div>`;
+
+    mcLoading = true;
+    renderMonteCarloResults();
 
     await new Promise(resolve => setTimeout(resolve, 20));
 
     monteCarloResults = runMonteCarloSimulations(100000);
     monteCarloResultsStale = false;
+    mcLoading = false;
+
     renderMonteCarloResults();
     updateMonteCarloButtonLabel();
-
-    btn.textContent = 'Recalculer les %';
     btn.disabled = false;
 }
 
