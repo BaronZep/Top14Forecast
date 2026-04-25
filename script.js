@@ -621,7 +621,7 @@ function runMonteCarloSimulations(N = 100000) {
     const startPts = basePoints.map((p, i) => p + userFixedDelta[i]);
 
     const cntTop2 = new Int32Array(T);
-    const cntBarragiste = new Int32Array(T);
+    const cntTop6 = new Int32Array(T);
     const cnt13 = new Int32Array(T);
     const cnt14 = new Int32Array(T);
 
@@ -648,7 +648,7 @@ function runMonteCarloSimulations(N = 100000) {
         for (let pos = 0; pos < T; pos++) {
             const ti = ranked[pos];
             if (pos < 2) cntTop2[ti]++;
-            if (pos >= 2 && pos < 6) cntBarragiste[ti]++;
+            if (pos < 6) cntTop6[ti]++;
             if (pos === 12) cnt13[ti]++;
             if (pos === 13) cnt14[ti]++;
         }
@@ -658,7 +658,7 @@ function runMonteCarloSimulations(N = 100000) {
     teamNames.forEach((name, i) => {
         results[name] = {
             top2: +(cntTop2[i] / N * 100).toFixed(1),
-            barragiste: +(cntBarragiste[i] / N * 100).toFixed(1),
+            top6: +(cntTop6[i] / N * 100).toFixed(1),
             pos13: +(cnt13[i] / N * 100).toFixed(1),
             pos14: +(cnt14[i] / N * 100).toFixed(1)
         };
@@ -692,10 +692,10 @@ function renderMonteCarloResults(results = monteCarloResults) {
                     <th>#</th>
                     <th style="text-align:left">Équipe</th>
                     <th>Pts</th>
-                    <th title="Places 1-2 — Demi-finale directe">Demi-finaliste</th>
-                    <th title="Places 3-6 — Barrages">Barragiste</th>
-                    <th title="13e — Barrage relégation">13e</th>
-                    <th title="14e — Relégation directe">14e</th>
+                    <th title="Places 1-2 — Demi-finale directe">1-2</th>
+                    <th title="Places 1-6 — Qualification en phases finales">1-6</th>
+                    <th title="13e — Barrage relégation">13</th>
+                    <th title="14e — Relégation directe">14</th>
                 </tr>
             </thead>
             <tbody>
@@ -715,7 +715,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
                             <span class="pts-breakdown">(${team.points - (deltaMap[team.name] || 0)} + ${deltaMap[team.name] || 0})</span>
                         </td>
                         <td>${r ? formatPct(r.top2) : '<span class="pct-zero">…</span>'}</td>
-                        <td>${r ? formatPct(r.barragiste) : '<span class="pct-zero">…</span>'}</td>
+                        <td>${r ? formatPct(r.top6) : '<span class="pct-zero">…</span>'}</td>
                         <td>${r ? formatPct(r.pos13) : '<span class="pct-zero">…</span>'}</td>
                         <td>${r ? formatPct(r.pos14) : '<span class="pct-zero">…</span>'}</td>
                     </tr>`;
