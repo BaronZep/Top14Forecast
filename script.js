@@ -127,6 +127,42 @@ function findTeamByName(teams, teamName) {
     return teams.find(team => normalizeTeamName(team.name) === target) || null;
 }
 
+function getProjectedDeltaMap() {
+    const deltaMap = {};
+
+    standingsData.forEach(team => {
+        deltaMap[team.name] = 0;
+    });
+
+    calendarData.forEach((round, rIdx) => {
+        if (round.interlude) return;
+
+        round.matches.forEach((match, mIdx) => {
+            if (match.homePts !== null && match.awayPts !== null) {
+                return;
+            }
+
+            const prediction = getMatchPrediction(rIdx, mIdx);
+            if (!prediction) {
+                return;
+            }
+
+            const homeTeam = findTeamByName(standingsData, match.homeTeam);
+            const awayTeam = findTeamByName(standingsData, match.awayTeam);
+
+            if (homeTeam) {
+                deltaMap[homeTeam.name] += prediction.homePts;
+            }
+
+            if (awayTeam) {
+                deltaMap[awayTeam.name] += prediction.awayPts;
+            }
+        });
+    });
+
+    return deltaMap;
+}
+
 function getMatchPrediction(rIdx, mIdx) {
     const match = calendarData[rIdx].matches[mIdx];
     const homeKey = getPredictionKey(rIdx, mIdx, match.homeTeam);
@@ -643,6 +679,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
     if (!section) return;
 
     const standings = getProjectedStandings();
+    const deltaMap = getProjectedDeltaMap();
     const staleBadge = monteCarloResultsStale
         ? `<div class="mc-warning">Pourcentages à recalculer</div>`
         : '';
@@ -655,7 +692,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
                     <th>#</th>
                     <th style="text-align:left">Équipe</th>
                     <th>Pts</th>
-                    <th title="Places 1-2 — Demi-finale directe">Demi-finaliste direct</th>
+                    <th title="Places 1-2 — Demi-finale directe">Demi-finaliste</th>
                     <th title="Places 3-6 — Barrages">Barragiste</th>
                     <th title="13e — Barrage relégation">13e</th>
                     <th title="14e — Relégation directe">14e</th>
@@ -673,7 +710,10 @@ function renderMonteCarloResults(results = monteCarloResults) {
                     return `<tr>
                         <td><span class="pos-badge ${cls}">${i + 1}</span></td>
                         <td style="text-align:left">${team.name}</td>
-                        <td><strong>${team.points}</strong></td>
+                        <td>
+                            <strong>${team.points}</strong>
+                            <span class="pts-breakdown">(${team.points - (deltaMap[team.name] || 0)} + ${deltaMap[team.name] || 0})</span>
+                        </td>
                         <td>${r ? formatPct(r.top2) : '<span class="pct-zero">…</span>'}</td>
                         <td>${r ? formatPct(r.barragiste) : '<span class="pct-zero">…</span>'}</td>
                         <td>${r ? formatPct(r.pos13) : '<span class="pct-zero">…</span>'}</td>

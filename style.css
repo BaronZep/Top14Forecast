@@ -107,12 +107,15 @@ tr {
 
 /* Couleurs de positions */
 .pos-badge {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    border-radius: 8px;
-    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
     text-align: center;
     background: var(--bg);
     box-shadow: 3px 3px 6px var(--shadow-dark),
@@ -464,38 +467,55 @@ tr {
 
 /* ── Monte-Carlo ── */
 .mc-card {
-    margin-top: 24px;
+    width: 100%;
+    max-width: 920px;
+    margin: 24px auto 0;
+    padding: 16px 18px;
+    border-radius: 22px;
 }
 
 .mc-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    gap: 12px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
-    gap: 0.5rem;
+}
+
+.mc-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.1;
 }
 
 .mc-btn {
-    padding: 8px 16px;
-    font-size: 0.9rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+}
+
+.mc-body {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .mc-loading {
+    min-height: 88px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 2rem 0;
-    opacity: 0.6;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    opacity: 0.7;
 }
 
 .mc-warning {
     margin: 0 0 12px 0;
     padding: 10px 14px;
     border-radius: 12px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 600;
     color: #8a6d1d;
     background: #fff4cc;
@@ -507,31 +527,97 @@ tr {
 }
 
 .mc-spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid currentColor;
-    border-top-color: transparent;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    animation: mc-spin 0.7s linear infinite;
+    border: 2px solid rgba(127, 127, 127, 0.25);
+    border-top-color: currentColor;
+    animation: mc-spin 0.8s linear infinite;
 }
 
 .mc-table {
     width: 100%;
+    min-width: 780px;
+    table-layout: fixed;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.90rem;
+    line-height: 1.2;
+}
+
+.mc-table thead th {
+    padding: 8px 8px 10px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    vertical-align: bottom;
+    white-space: normal;
+    opacity: 0.78;
+}
+
+.mc-table tbody td {
+    padding: 8px 8px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .mc-table th,
 .mc-table td {
-    padding: 8px 10px;
-    text-align: center;
-    border-bottom: 1px solid var(--border, rgba(0,0,0,0.08));
+    border-bottom: 1px solid rgba(127, 127, 127, 0.16);
 }
 
-.mc-table thead th {
-    font-weight: 600;
-    opacity: 0.7;
-    font-size: 0.8rem;
+.mc-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.mc-table th:nth-child(1),
+.mc-table td:nth-child(1) {
+    width: 44px;
+}
+
+.mc-table th:nth-child(2),
+.mc-table td:nth-child(2) {
+    width: 26%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mc-table th:nth-child(3),
+.mc-table td:nth-child(3) {
+    width: 150px;
+    white-space: nowrap;
+}
+
+.mc-table th:nth-child(4),
+.mc-table td:nth-child(4),
+.mc-table th:nth-child(5),
+.mc-table td:nth-child(5),
+.mc-table th:nth-child(6),
+.mc-table td:nth-child(6),
+.mc-table th:nth-child(7),
+.mc-table td:nth-child(7) {
+    width: 82px;
+    white-space: nowrap;
+}
+
+.pts-breakdown {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.82em;
+    color: var(--text-muted, #777);
+    white-space: nowrap;
+}
+
+.pct-zero,
+.pct-low,
+.pct-mid,
+.pct-high,
+.pct-certain {
+    display: inline-block;
+    min-width: 38px;
+    white-space: nowrap;
 }
 
 .pct-zero {
@@ -562,6 +648,45 @@ tr {
 
     .playoff-column-final {
         align-self: stretch;
+    }
+
+    .mc-card {
+        padding: 14px 14px;
+    }
+
+    .mc-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .mc-btn {
+        width: 100%;
+    }
+
+    .mc-table {
+        min-width: 720px;
+        font-size: 0.86rem;
+    }
+
+    .mc-table thead th,
+    .mc-table tbody td {
+        padding: 7px 6px;
+    }
+
+    .mc-table th:nth-child(3),
+    .mc-table td:nth-child(3) {
+        width: 138px;
+    }
+
+    .mc-table th:nth-child(4),
+    .mc-table td:nth-child(4),
+    .mc-table th:nth-child(5),
+    .mc-table td:nth-child(5),
+    .mc-table th:nth-child(6),
+    .mc-table td:nth-child(6),
+    .mc-table th:nth-child(7),
+    .mc-table td:nth-child(7) {
+        width: 74px;
     }
 }
 
