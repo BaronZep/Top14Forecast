@@ -237,7 +237,7 @@ body.light-mode {
 }
 
 .playoff-team.is-winner {
-    border-color: #cba052;
+    border-color: #f2c94c;
     box-shadow: 0 0 0 3px rgba(242, 201, 76, 0.18);
     background: rgba(242, 201, 76, 0.12);
     font-weight: 700;
@@ -351,4 +351,32 @@ body.dark-mode .sun-icon {
 
 .mode-label {
     display: none;
+}
+
+
+/* ── Interlude card ── */
+.interlude-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 32px 24px;
+    text-align: center;
+    gap: 16px;
+}
+
+.interlude-title {
+    background: var(--bg);
+    border-radius: 12px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.interlude-content {
+    font-size: 1rem;
+    opacity: 0.8;
+    line-height: 1.6;
 }

@@ -309,6 +309,13 @@
     ]
   },
   {
+    "interlude": true,
+    "title": "Weekend Européen",
+    "content": ["Demi-finales Champions Cup :",
+    "Leinster vs RC Toulon<br> Union Bordeaux-Bègles vs Bath Rugby",
+    "<br><br>Demi-finales Challenge Cup : <br> Montpellier Hérault Rugby vs Newport Dragons"]
+  },
+  {
     "round": 24,
     "matches": [
       {"homeTeam": "Section Paloise", "awayTeam": "ASM Clermont", "homePts": null, "awayPts": null},
@@ -319,6 +326,12 @@
       {"homeTeam": "Union Bordeaux-Bègles", "awayTeam": "USA Perpignan", "homePts": null, "awayPts": null},
       {"homeTeam": "US Montauban", "awayTeam": "Stade Français Paris", "homePts": null, "awayPts": null}
     ]
+  },
+  {
+    "interlude": true,
+    "title": "Weekend Européen",
+    "content": ["Finale Champions Cup",
+    "<br>Finale Challenge Cup"]
   },
   {
     "round": 25,
