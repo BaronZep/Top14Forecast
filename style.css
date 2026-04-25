@@ -491,6 +491,17 @@ tr {
     font-size: 0.9rem;
 }
 
+.mc-warning {
+    margin: 0 0 12px 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #8a6d1d;
+    background: #fff4cc;
+    border: 1px solid #f0d98a;
+}
+
 @keyframes mc-spin {
     to { transform: rotate(360deg); }
 }
