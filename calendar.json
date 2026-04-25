@@ -287,13 +287,13 @@
   {
     "round": 22,
     "matches": [
-      {"homeTeam": "Stade Toulousain", "awayTeam": "ASM Clermont", "homePts": null, "awayPts": null},
-      {"homeTeam": "LOU Rugby", "awayTeam": "Castres Olympique", "homePts": null, "awayPts": null},
-      {"homeTeam": "RC Toulon", "awayTeam": "Aviron Bayonnais", "homePts": null, "awayPts": null},
-      {"homeTeam": "Stade Français Paris", "awayTeam": "Section Paloise", "homePts": null, "awayPts": null},
-      {"homeTeam": "Union Bordeaux-Bègles", "awayTeam": "Montpellier Hérault Rugby", "homePts": null, "awayPts": null},
-      {"homeTeam": "US Montauban", "awayTeam": "Racing 92", "homePts": null, "awayPts": null},
-      {"homeTeam": "USA Perpignan", "awayTeam": "Stade Rochelais", "homePts": null, "awayPts": null}
+      {"homeTeam": "Stade Toulousain", "awayTeam": "ASM Clermont", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      {"homeTeam": "LOU Rugby", "awayTeam": "Castres Olympique", "homeScore": 26, "awayScore": 21, "homePts": 4, "awayPts": 1 },
+      {"homeTeam": "RC Toulon", "awayTeam": "Aviron Bayonnais", "homeScore": 52, "awayScore": 26, "homePts": 5, "awayPts": 0 },
+      {"homeTeam": "Stade Français Paris", "awayTeam": "Section Paloise", "homeScore": 34, "awayScore": 32, "homePts": 4, "awayPts": 1 },
+      {"homeTeam": "Union Bordeaux-Bègles", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 21, "awayScore": 23, "homePts": 1, "awayPts": 4 },
+      {"homeTeam": "US Montauban", "awayTeam": "Racing 92", "homeScore": 10, "awayScore": 59, "homePts": 0, "awayPts": 5 },
+      {"homeTeam": "USA Perpignan", "awayTeam": "Stade Rochelais", "homeScore": 29, "awayScore":31 , "homePts": 1, "awayPts": 4 }
     ]
   },
   {
