@@ -50,11 +50,33 @@
 </div>
 
 <section class="neumo-card mc-card">
-  <div class="mc-header">
+<div class="mc-header">
+  <div class="mc-title-wrap">
     <h2>Probabilités de fin de saison</h2>
+    <span class="info-tooltip-wrap">
+      <button
+        type="button"
+        class="info-tooltip-trigger neumo-btn"
+        aria-label="Explication du calcul des probabilités"
+        aria-describedby="mc-tooltip"
+      >i</button>
+
+      <span id="mc-tooltip" class="info-tooltip-box" role="tooltip">
+        Les pourcentages sont estimés par simulation Monte-Carlo : à partir du classement actuel,
+        l’application simule 100 000 fins de saison possibles en tirant aléatoirement une issue
+        pour chaque match non encore joué. Les matchs déjà saisis manuellement sont, eux, considérés
+        comme fixes. Le pourcentage affiché correspond à la fréquence observée sur ces simulations
+        (par exemple : finir dans les places 1-2, 1-6, 13 ou 14). Deux recalculs successifs peuvent
+        donc donner des résultats très proches mais pas parfaitement identiques : c’est normal, car
+        le tirage aléatoire change d’une série de simulations à l’autre.
+      </span>
+    </span>
+  </div>
     <button id="mc-run-btn" class="neumo-btn mc-btn" onclick="handleRunSimulation()">Calculer (100 000 simulations)</button>
   </div>
   <div id="montecarlo-section" class="mc-body"></div>
+</div>
+
 </section>
 
 <script src="script.js" defer></script>

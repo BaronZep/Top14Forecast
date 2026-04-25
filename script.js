@@ -88,9 +88,7 @@ function initUI() {
     document.getElementById('next-btn').onclick = () => changeRound(1);
 
     const mcBtn = document.getElementById('mc-run-btn');
-    if (mcBtn) {
-        mcBtn.textContent = 'Recalculer les %';
-    }
+    updateMonteCarloButtonLabel();
 
     updateDisplay();
 }
@@ -674,6 +672,13 @@ function formatPct(pct) {
     return `<span class="${cls}">${pct}%</span>`;
 }
 
+function updateMonteCarloButtonLabel() {
+    const mcBtn = document.getElementById('mc-run-btn');
+    if (!mcBtn) return;
+
+    mcBtn.textContent = monteCarloResults ? 'Recalculer les %' : 'Calculer les %';
+}
+
 function renderMonteCarloResults(results = monteCarloResults) {
     const section = document.getElementById('montecarlo-section');
     if (!section) return;
@@ -738,6 +743,7 @@ async function handleRunSimulation() {
     monteCarloResults = runMonteCarloSimulations(100000);
     monteCarloResultsStale = false;
     renderMonteCarloResults();
+    updateMonteCarloButtonLabel();
 
     btn.textContent = 'Recalculer les %';
     btn.disabled = false;
