@@ -40,9 +40,6 @@ L'utilisateur fixe seulement certains résultats jugés décisifs, puis laisse l
 
 L'ensemble des résultats restants peut être imposé pour construire une fin de saison entièrement déterministe et en observer les conséquences sur le classement final.
 
-### Partage par clé
-
-Les pronostics peuvent être encodés dans une clé compacte en hexadécimal. Cette clé permet de sauvegarder, recharger et partager rapidement un scénario.
 
 ## Clé de pronostic
 
