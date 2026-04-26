@@ -379,7 +379,7 @@ function applyPredictionWord(rawWord) {
     const maxBits = totalSlots * BITS_PER_TEAM_PREDICTION;
 
     if (bitString.length > maxBits) {
-        setPredictionKeyInputError('Clé trop longue');
+        setPredictionKeyInputError("Plus assez de matchs à pronostiquer pour cette clé");
         return;
     }
 
