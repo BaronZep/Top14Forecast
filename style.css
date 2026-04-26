@@ -855,3 +855,96 @@ tr {
         order: -1;
     }
 }
+
+
+
+.prediction-hex-toolbar {
+  margin-top: 1rem;
+  padding: 0.65rem 0.8rem 0.55rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr) 38px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#prediction-hex-output,
+#prediction-hex-input {
+  min-width: 0;
+  height: 38px;
+  padding: 0 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1;
+  text-transform: none;
+  outline: none;
+  box-shadow: inset 2px 2px 4px var(--shadow-dark),
+              inset -2px -2px 4px var(--shadow-light);
+}
+
+#prediction-hex-output:focus,
+#prediction-hex-input:focus {
+  box-shadow: inset 0 0 0 1px #cba052,
+              inset 2px 2px 4px var(--shadow-dark),
+              inset -2px -2px 4px var(--shadow-light);
+}
+
+#prediction-hex-output {
+  opacity: 0.78;
+}
+
+#prediction-hex-output::placeholder,
+#prediction-hex-input::placeholder {
+  opacity: 0.55;
+}
+
+#prediction-hex-output::selection,
+#prediction-hex-input::selection {
+  background: #cba052;
+  color: #1f1f1f;
+}
+
+#prediction-hex-output::-moz-selection,
+#prediction-hex-input::-moz-selection {
+  background: #cba052;
+  color: #1f1f1f;
+}
+
+.prediction-hex-icon-btn {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prediction-hex-icon-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#prediction-hex-input.is-error {
+  color: #b42318;
+  box-shadow: inset 2px 2px 4px rgba(120, 28, 28, 0.16),
+              inset -2px -2px 4px rgba(255, 255, 255, 0.5);
+}
+
+#prediction-hex-input.is-error::placeholder {
+  color: #b42318;
+  opacity: 0.95;
+}
+
+@media (max-width: 700px) {
+  .prediction-hex-toolbar {
+    grid-template-columns: minmax(0, 1fr) 38px;
+  }
+}

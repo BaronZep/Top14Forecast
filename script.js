@@ -14,6 +14,12 @@ let playoffPredictions = {
 };
 let mcLoading = false;
 
+const SYMBOL_TO_CODE = { '-': 0, '0': 1, '1': 2, '2': 3, '4': 4, '5': 5 };
+const CODE_TO_POINTS = { 0: '', 1: 0, 2: 1, 3: 2, 4: 4, 5: 5 };
+const BITS_PER_TEAM_PREDICTION = 3;
+const BITS_PER_MATCH_PREDICTION = BITS_PER_TEAM_PREDICTION * 2;
+const PREDICTION_KEY_PREFIX = 'T14:';
+
 const SCORE_OPTIONS = [0, 1, 2, 4, 5];
 const SCORE_COMPATIBILITY = {
     0: [4, 5],
@@ -191,6 +197,27 @@ function initUI() {
     document.getElementById('prev-btn').onclick = () => changeRound(-1);
     document.getElementById('next-btn').onclick = () => changeRound(1);
 
+    const loadBtn = document.getElementById('prediction-hex-load');
+    const copyBtn = document.getElementById('prediction-hex-copy');
+    const input = document.getElementById('prediction-hex-input');
+
+    if (loadBtn) loadBtn.onclick = handlePredictionWordLoad;
+    if (copyBtn) copyBtn.onclick = copyPredictionWord;
+    if (input) {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handlePredictionWordLoad();
+            }
+        });
+
+        input.addEventListener('input', () => {
+            if (input.classList.contains('is-error')) {
+                clearPredictionKeyInputError();
+            }
+        });
+    }
+
     updateMonteCarloButtonLabel();
     updateDisplay();
 }
@@ -216,6 +243,7 @@ function updateDisplay() {
     renderMatches();
     renderPlayoffs(playoffBracket);
     renderMonteCarloResults();
+    refreshPredictionWord();
 
     const currentEntry = calendarData[currentRoundIdx];
     const label = document.getElementById('round-label');
@@ -232,6 +260,187 @@ function updateDisplay() {
 
 function getPredictionKey(rIdx, mIdx, teamName) {
     return `R${rIdx}|M${mIdx}|${teamName}`;
+}
+
+function getPredictableMatchRefs() {
+    const refs = [];
+
+    calendarData.forEach((entry, rIdx) => {
+        if (!isRoundEntry(entry)) return;
+
+        entry.matches.forEach((match, mIdx) => {
+            if (match.homePts !== null || match.awayPts !== null) return;
+            refs.push({ rIdx, mIdx, match });
+        });
+    });
+
+    return refs;
+}
+
+function getPredictionSymbol(value) {
+    if (value === undefined || value === null || value === '') return '-';
+    return String(value);
+}
+
+const BASE64URL_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+function encodeBitsToBase64Url(bitString) {
+    if (!bitString) return '';
+
+    const paddedBits = bitString.padEnd(Math.ceil(bitString.length / 6) * 6, '0');
+    let out = '';
+
+    for (let i = 0; i < paddedBits.length; i += 6) {
+        out += BASE64URL_ALPHABET[parseInt(paddedBits.slice(i, i + 6), 2)];
+    }
+
+    return out;
+}
+
+function decodeBase64UrlToBits(text) {
+    let bits = '';
+
+    for (const char of text) {
+        const digit = BASE64URL_ALPHABET.indexOf(char);
+        if (digit === -1) {
+            return null;
+        }
+
+        bits += digit.toString(2).padStart(6, '0');
+    }
+
+    return bits;
+}
+
+function encodePredictionKey() {
+    const chunks = [];
+
+    getPredictableMatchRefs().forEach(({ rIdx, mIdx, match }) => {
+        [match.homeTeam, match.awayTeam].forEach(teamName => {
+            const key = getPredictionKey(rIdx, mIdx, teamName);
+            const symbol = getPredictionSymbol(userPredictions[key]);
+            const code = SYMBOL_TO_CODE[symbol];
+            chunks.push(code.toString(2).padStart(BITS_PER_TEAM_PREDICTION, '0'));
+        });
+    });
+
+    while (chunks.length > 0 && chunks[chunks.length - 1] === '000') {
+        chunks.pop();
+    }
+
+    const payload = encodeBitsToBase64Url(chunks.join(''));
+    return payload ? `${PREDICTION_KEY_PREFIX}${payload}` : '';
+}
+
+function setPredictionKeyInputError(message) {
+    const input = document.getElementById('prediction-hex-input');
+    if (!input) return;
+
+    input.classList.add('is-error');
+    input.value = '';
+    input.placeholder = message;
+}
+
+function clearPredictionKeyInputError() {
+    const input = document.getElementById('prediction-hex-input');
+    if (!input) return;
+
+    input.classList.remove('is-error');
+    input.placeholder = 'Charger une clé';
+}
+
+function applyPredictionWord(rawWord) {
+    const compactWord = String(rawWord ?? '').trim().replace(/\s+/g, '');
+
+    if (!compactWord) {
+        clearPredictionKeyInputError();
+        return;
+    }
+
+    if (!compactWord.startsWith(PREDICTION_KEY_PREFIX)) {
+        setPredictionKeyInputError(`Clé invalide`);
+        return;
+    }
+
+    const payload = compactWord.slice(PREDICTION_KEY_PREFIX.length);
+    if (!payload) {
+        setPredictionKeyInputError('Clé invalide');
+        return;
+    }
+
+    const bitString = decodeBase64UrlToBits(payload);
+    if (bitString === null) {
+        setPredictionKeyInputError('Clé invalide');
+        return;
+    }
+
+    const predictableMatches = getPredictableMatchRefs();
+    const totalSlots = predictableMatches.length * 2;
+    const maxBits = totalSlots * BITS_PER_TEAM_PREDICTION;
+
+    if (bitString.length > maxBits) {
+        setPredictionKeyInputError('Clé trop longue');
+        return;
+    }
+
+    predictableMatches.forEach(({ rIdx, mIdx, match }, matchIdx) => {
+        [match.homeTeam, match.awayTeam].forEach((teamName, teamOffset) => {
+            const slotIdx = matchIdx * 2 + teamOffset;
+            const start = slotIdx * BITS_PER_TEAM_PREDICTION;
+            const chunk = bitString.slice(start, start + BITS_PER_TEAM_PREDICTION);
+            const key = getPredictionKey(rIdx, mIdx, teamName);
+
+            if (chunk.length < BITS_PER_TEAM_PREDICTION) {
+                delete userPredictions[key];
+                return;
+            }
+
+            const code = parseInt(chunk, 2);
+            if (!(code in CODE_TO_POINTS)) {
+                delete userPredictions[key];
+                return;
+            }
+
+            const value = CODE_TO_POINTS[code];
+            if (value === '' || value === undefined) {
+                delete userPredictions[key];
+            } else {
+                userPredictions[key] = value;
+            }
+        });
+    });
+
+    clearPredictionKeyInputError();
+
+    const projectedStandings = getProjectedStandings();
+    sanitizePlayoffPredictions(projectedStandings);
+    monteCarloResultsStale = true;
+    renderMatches();
+    renderPlayoffs(getPlayoffBracket(projectedStandings));
+    renderMonteCarloResults();
+    refreshPredictionWord();
+}
+
+function handlePredictionWordLoad() {
+    const input = document.getElementById('prediction-hex-input');
+    if (!input) return;
+    applyPredictionWord(input.value);
+}
+
+function refreshPredictionWord() {
+    const output = document.getElementById('prediction-hex-output');
+    if (!output) return;
+
+    output.value = encodePredictionKey();
+}
+
+function copyPredictionWord() {
+    const output = document.getElementById('prediction-hex-output');
+    if (!output) return;
+
+    output.select();
+    output.setSelectionRange(0, output.value.length);
+    navigator.clipboard.writeText(output.value).catch(() => {});
 }
 
 function findTeamByName(teams, teamName) {
@@ -549,6 +758,8 @@ function renderMatches() {
     const entry = calendarData[currentRoundIdx];
     const list = document.getElementById('matches-list');
 
+    if (!list) return;
+
     if (!entry) {
         list.innerHTML = '';
         return;
@@ -650,11 +861,8 @@ function handlePredict(rIdx, mIdx, side, value) {
     renderMatches();
     renderPlayoffs(getPlayoffBracket(projectedStandings));
     renderMonteCarloResults();
+    refreshPredictionWord();
 }
-
-// ─────────────────────────────────────────────
-//  MONTE-CARLO SIMULATION
-// ─────────────────────────────────────────────
 
 const MC_OUTCOMES = [
     [4, 0], [4, 1], [5, 0], [5, 1],
