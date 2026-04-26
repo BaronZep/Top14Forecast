@@ -4,6 +4,7 @@ let currentRoundIdx = 0;
 let userPredictions = {};
 let monteCarloResults = null;
 let monteCarloResultsStale = false;
+let standingsSyncWarning = null;
 let playoffPredictions = {
     barrage1: null,
     barrage2: null,
@@ -30,6 +31,100 @@ function normalizeTeamName(name) {
         .toLowerCase();
 }
 
+function isRoundEntry(entry) {
+    return Array.isArray(entry?.matches);
+}
+
+function isDisplayableEntry(entry) {
+    return !!entry?.interlude || isRoundEntry(entry);
+}
+
+function getDisplayableRoundIndices() {
+    return calendarData
+        .map((entry, idx) => ({ entry, idx }))
+        .filter(({ entry }) => isDisplayableEntry(entry))
+        .map(({ idx }) => idx);
+}
+
+function getCurrentDisplayableIndices() {
+    return getDisplayableRoundIndices();
+}
+
+function getTeamAdjustments() {
+    const adjustmentEntry = calendarData.find(entry => entry?.type === 'adjustments');
+    return adjustmentEntry?.teamAdjustments || {};
+}
+
+function computeStandingsFromCalendar() {
+    const derived = {};
+    const adjustments = getTeamAdjustments();
+
+    standingsData.forEach(team => {
+        derived[team.name] = 0;
+    });
+
+    calendarData.forEach(entry => {
+        if (!isRoundEntry(entry)) return;
+
+        entry.matches.forEach(match => {
+            if (match.homePts === null || match.awayPts === null) return;
+
+            const homeTeam = findTeamByName(standingsData, match.homeTeam);
+            const awayTeam = findTeamByName(standingsData, match.awayTeam);
+
+            if (homeTeam) {
+                derived[homeTeam.name] = (derived[homeTeam.name] || 0) + Number(match.homePts || 0);
+            }
+
+            if (awayTeam) {
+                derived[awayTeam.name] = (derived[awayTeam.name] || 0) + Number(match.awayPts || 0);
+            }
+        });
+    });
+
+    Object.entries(adjustments).forEach(([teamName, delta]) => {
+        const team = findTeamByName(standingsData, teamName);
+        if (team) {
+            derived[team.name] = (derived[team.name] || 0) + Number(delta || 0);
+        }
+    });
+
+    return derived;
+}
+
+function updateStandingsSyncWarning() {
+    const derived = computeStandingsFromCalendar();
+    const mismatches = [];
+
+    standingsData.forEach(team => {
+        const expected = derived[team.name] || 0;
+        const actual = Number(team.points) || 0;
+
+        if (actual !== expected) {
+            mismatches.push({
+                name: team.name,
+                actual,
+                expected
+            });
+        }
+    });
+
+    if (!mismatches.length) {
+        standingsSyncWarning = null;
+        return;
+    }
+
+    const preview = mismatches
+        .slice(0, 3)
+        .map(team => `${team.name} (${team.actual} vs ${team.expected})`)
+        .join(', ');
+
+    standingsSyncWarning =
+        `Classement incohérent avec calendar.json — mettre à jour standings.json` +
+        `${preview ? ` : ${preview}` : ''}` +
+        `${mismatches.length > 3 ? '…' : ''}`;
+}
+
 async function loadData() {
     try {
         const [sRes, cRes] = await Promise.all([
@@ -40,14 +135,22 @@ async function loadData() {
         standingsData = await sRes.json();
         calendarData = await cRes.json();
 
-        currentRoundIdx = calendarData.findIndex(round =>
-            !round.interlude && round.matches.some(match => match.homePts === null)
-        );
+        const displayableIndices = getDisplayableRoundIndices();
 
-        if (currentRoundIdx === -1) {
-            currentRoundIdx = calendarData.length - 1;
+        const firstPendingIdx = displayableIndices.find(idx => {
+            const entry = calendarData[idx];
+            return isRoundEntry(entry) && entry.matches.some(match => match.homePts === null);
+        });
+
+        if (firstPendingIdx !== undefined) {
+            currentRoundIdx = firstPendingIdx;
+        } else if (displayableIndices.length > 0) {
+            currentRoundIdx = displayableIndices[displayableIndices.length - 1];
+        } else {
+            currentRoundIdx = 0;
         }
 
+        updateStandingsSyncWarning();
         initUI();
     } catch (e) {
         console.error('Utilisez Live Server !', e);
@@ -88,17 +191,19 @@ function initUI() {
     document.getElementById('prev-btn').onclick = () => changeRound(-1);
     document.getElementById('next-btn').onclick = () => changeRound(1);
 
-    const mcBtn = document.getElementById('mc-run-btn');
     updateMonteCarloButtonLabel();
-
     updateDisplay();
 }
 
 function changeRound(step) {
-    const newIdx = currentRoundIdx + step;
+    const displayableIndices = getCurrentDisplayableIndices();
+    const currentPos = displayableIndices.indexOf(currentRoundIdx);
 
-    if (newIdx >= 0 && newIdx < calendarData.length) {
-        currentRoundIdx = newIdx;
+    if (currentPos === -1) return;
+
+    const newPos = currentPos + step;
+    if (newPos >= 0 && newPos < displayableIndices.length) {
+        currentRoundIdx = displayableIndices[newPos];
         updateDisplay();
     }
 }
@@ -111,8 +216,16 @@ function updateDisplay() {
     renderMatches();
     renderPlayoffs(playoffBracket);
     renderMonteCarloResults();
+
     const currentEntry = calendarData[currentRoundIdx];
-    document.getElementById('round-label').innerText = currentEntry.interlude
+    const label = document.getElementById('round-label');
+
+    if (!currentEntry) {
+        label.innerText = '';
+        return;
+    }
+
+    label.innerText = currentEntry.interlude
         ? currentEntry.title
         : `Journée ${currentEntry.round}`;
 }
@@ -134,7 +247,7 @@ function getProjectedDeltaMap() {
     });
 
     calendarData.forEach((round, rIdx) => {
-        if (round.interlude) return;
+        if (!isRoundEntry(round)) return;
 
         round.matches.forEach((match, mIdx) => {
             if (match.homePts !== null && match.awayPts !== null) {
@@ -163,7 +276,12 @@ function getProjectedDeltaMap() {
 }
 
 function getMatchPrediction(rIdx, mIdx) {
-    const match = calendarData[rIdx].matches[mIdx];
+    const round = calendarData[rIdx];
+    if (!isRoundEntry(round)) return null;
+
+    const match = round.matches[mIdx];
+    if (!match) return null;
+
     const homeKey = getPredictionKey(rIdx, mIdx, match.homeTeam);
     const awayKey = getPredictionKey(rIdx, mIdx, match.awayTeam);
 
@@ -192,7 +310,8 @@ function getProjectedStandings() {
     const live = standingsData.map(team => ({ ...team }));
 
     calendarData.forEach((round, rIdx) => {
-        if (round.interlude) return;
+        if (!isRoundEntry(round)) return;
+
         round.matches.forEach((match, mIdx) => {
             if (match.homePts !== null && match.awayPts !== null) {
                 return;
@@ -239,7 +358,8 @@ function calculateHeadToHead(teamA, teamB) {
     let ptsB = 0;
 
     calendarData.forEach((round, rIdx) => {
-        if (round.interlude) return;
+        if (!isRoundEntry(round)) return;
+
         round.matches.forEach((match, mIdx) => {
             const matchHome = normalizeTeamName(match.homeTeam);
             const matchAway = normalizeTeamName(match.awayTeam);
@@ -427,19 +547,26 @@ function handlePlayoffPick(matchId, teamName) {
 
 function renderMatches() {
     const entry = calendarData[currentRoundIdx];
+    const list = document.getElementById('matches-list');
+
+    if (!entry) {
+        list.innerHTML = '';
+        return;
+    }
 
     if (entry.interlude) {
-        const list = document.getElementById('matches-list');
         list.innerHTML = `<div class="interlude-card">
             ${entry.content ? `<div class="interlude-content">${Array.isArray(entry.content) ? entry.content.join('<br>') : entry.content}</div>` : ''}
         </div>`;
         return;
     }
 
-    const list = document.getElementById('matches-list');
-    const round = calendarData[currentRoundIdx];
+    if (!isRoundEntry(entry)) {
+        list.innerHTML = '';
+        return;
+    }
 
-    list.innerHTML = round.matches.map((match, mIdx) => {
+    list.innerHTML = entry.matches.map((match, mIdx) => {
         const isFuture = match.homePts === null;
 
         return `<div class="match-row">
@@ -455,7 +582,12 @@ function renderMatches() {
 }
 
 function renderSelect(rIdx, mIdx, side) {
-    const match = calendarData[rIdx].matches[mIdx];
+    const round = calendarData[rIdx];
+    if (!isRoundEntry(round)) return '';
+
+    const match = round.matches[mIdx];
+    if (!match) return '';
+
     const teamName = side === 'home' ? match.homeTeam : match.awayTeam;
     const opponentName = side === 'home' ? match.awayTeam : match.homeTeam;
 
@@ -475,7 +607,11 @@ function renderSelect(rIdx, mIdx, side) {
 }
 
 function handlePredict(rIdx, mIdx, side, value) {
-    const match = calendarData[rIdx].matches[mIdx];
+    const round = calendarData[rIdx];
+    if (!isRoundEntry(round)) return;
+
+    const match = round.matches[mIdx];
+    if (!match) return;
 
     const homeKey = getPredictionKey(rIdx, mIdx, match.homeTeam);
     const awayKey = getPredictionKey(rIdx, mIdx, match.awayTeam);
@@ -586,7 +722,8 @@ function runMonteCarloSimulations(N = 100000) {
     const fixedH2H = new Int32Array(T * T);
 
     calendarData.forEach((round, rIdx) => {
-        if (round.interlude) return;
+        if (!isRoundEntry(round)) return;
+
         round.matches.forEach((match, mIdx) => {
             const hi = teamIdx[normalizeTeamName(match.homeTeam)];
             const ai = teamIdx[normalizeTeamName(match.awayTeam)];
@@ -690,6 +827,10 @@ function renderMonteCarloResults(results = monteCarloResults) {
         ? `<div class="mc-warning">Pourcentages à recalculer</div>`
         : '';
 
+    const syncBadge = standingsSyncWarning
+        ? `<div class="mc-warning mc-warning-error">${standingsSyncWarning}</div>`
+        : '';
+
     const overlay = mcLoading
         ? `<div class="mc-overlay" role="status" aria-live="polite" aria-label="Calcul des probabilités en cours">
                 <div class="mc-overlay-content">
@@ -701,6 +842,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
 
     section.innerHTML = `
         <div class="mc-body-shell" aria-busy="${mcLoading ? 'true' : 'false'}">
+            ${syncBadge}
             ${staleBadge}
             <div class="mc-body">
                 <table class="mc-table">

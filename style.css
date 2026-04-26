@@ -512,6 +512,12 @@ tr {
     border: 1px solid #f0d98a;
 }
 
+.mc-warning-error {
+    color: #8f3b46;
+    background: #f8d7dd;
+    border: 1px solid #e7aeb8;
+}
+
 @keyframes mc-spin {
     to { transform: rotate(360deg); }
 }

@@ -42,8 +42,8 @@
     "round": 4,
     "date": "Samedi 27 septembre 2025",
     "matches": [
-      { "homeTeam": "Stade Français Paris", "awayTeam": "Union Bordeaux-Bègles", "homeScore": 28, "awayScore": 43, "homePts": 0, "awayPts": 4 },
-      { "homeTeam": "Racing 92", "awayTeam": "ASM Clermont", "homeScore": 7, "awayScore": 31, "homePts": 0, "awayPts": 4 },
+      { "homeTeam": "Stade Français Paris", "awayTeam": "Union Bordeaux-Bègles", "homeScore": 28, "awayScore": 7, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "Racing 92", "awayTeam": "ASM Clermont", "homeScore": 43, "awayScore": 31, "homePts": 4, "awayPts": 0 },
       { "homeTeam": "Section Paloise", "awayTeam": "LOU Rugby", "homeScore": 40, "awayScore": 15, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "Stade Rochelais", "awayTeam": "USA Perpignan", "homeScore": 31, "awayScore": 8, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "US Montauban", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 22, "awayScore": 22, "homePts": 2, "awayPts": 2 },
@@ -96,8 +96,8 @@
     "matches": [
       { "homeTeam": "LOU Rugby", "awayTeam": "Stade Rochelais", "homeScore": 19, "awayScore": 36, "homePts": 0, "awayPts": 4 },
       { "homeTeam": "ASM Clermont", "awayTeam": "Castres Olympique", "homeScore": 63, "awayScore": 14, "homePts": 5, "awayPts": 0 },
-      { "homeTeam": "Racing 92", "awayTeam": "Section Paloise", "homeScore": 10, "awayScore": 15, "homePts": 1, "awayPts": 4 },
-      { "homeTeam": "Stade Français Paris", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 12, "awayScore": 35, "homePts": 0, "awayPts": 5 },
+      { "homeTeam": "Racing 92", "awayTeam": "Section Paloise", "homeScore": 15, "awayScore": 10, "homePts": 4, "awayPts": 1 },
+      { "homeTeam": "Stade Français Paris", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 35, "awayScore": 12, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "US Montauban", "awayTeam": "USA Perpignan", "homeScore": 29, "awayScore": 22, "homePts": 4, "awayPts": 0 },
       { "homeTeam": "Union Bordeaux-Bègles", "awayTeam": "Aviron Bayonnais", "homeScore": 41, "awayScore": 12, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "Stade Toulousain", "awayTeam": "RC Toulon", "homeScore": 59, "awayScore": 24, "homePts": 5, "awayPts": 0 }
@@ -211,12 +211,12 @@
     "round": 17,
     "date": "Samedi 14 février 2026",
     "matches": [
-      { "homeTeam": "Union Bordeaux-Bègles", "awayTeam": "Castres Olympique", "homeScore": 50, "awayScore": 32, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "Union Bordeaux-Bègles", "awayTeam": "Castres Olympique", "homeScore": 57, "awayScore": 32, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "Aviron Bayonnais", "awayTeam": "Racing 92", "homeScore": 36, "awayScore": 41, "homePts": 1, "awayPts": 4 },
       { "homeTeam": "LOU Rugby", "awayTeam": "US Montauban", "homeScore": 73, "awayScore": 12, "homePts": 5, "awayPts": 0 },
       { "homeTeam": "Stade Rochelais", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 33, "awayScore": 43, "homePts": 0, "awayPts": 4 },
       { "homeTeam": "RC Toulon", "awayTeam": "ASM Clermont", "homeScore": 14, "awayScore": 34, "homePts": 0, "awayPts": 5 },
-      { "homeTeam": "USA Perpignan", "awayTeam": "Section Paloise", "homeScore": 0, "awayScore": 0, "homePts": 0, "awayPts": 0, "comment": "Reporté ou non joué dans le doc" },
+      { "homeTeam": "USA Perpignan", "awayTeam": "Section Paloise", "homeScore": 40, "awayScore": 24, "homePts": 4, "awayPts": 0 },
       { "homeTeam": "Stade Français Paris", "awayTeam": "Stade Toulousain", "homeScore": 9, "awayScore": 13, "homePts": 1, "awayPts": 4 }
     ]
   },
@@ -285,6 +285,13 @@
     ]
   },
   {
+    "interlude": true,
+    "title": "Weekend Européen",
+    "content": ["Demi-finales Champions Cup :",
+    "Leinster vs RC Toulon<br> Union Bordeaux-Bègles vs Bath Rugby",
+    "<br><br>Demi-finales Challenge Cup : <br> Montpellier Hérault Rugby vs Newport Dragons"]
+  },
+  {
     "round": 23,
     "matches": [
       {"homeTeam": "ASM Clermont", "awayTeam": "USA Perpignan", "homePts": null, "awayPts": null},
@@ -295,13 +302,6 @@
       {"homeTeam": "Section Paloise", "awayTeam": "Castres Olympique", "homePts": null, "awayPts": null},
       {"homeTeam": "Stade Français Paris", "awayTeam": "LOU Rugby", "homePts": null, "awayPts": null}
     ]
-  },
-  {
-    "interlude": true,
-    "title": "Weekend Européen",
-    "content": ["Demi-finales Champions Cup :",
-    "Leinster vs RC Toulon<br> Union Bordeaux-Bègles vs Bath Rugby",
-    "<br><br>Demi-finales Challenge Cup : <br> Montpellier Hérault Rugby vs Newport Dragons"]
   },
   {
     "round": 24,
@@ -344,5 +344,11 @@
       {"homeTeam": "Section Paloise", "awayTeam": "US Montauban", "homePts": null, "awayPts": null},
       {"homeTeam": "Stade Rochelais", "awayTeam": "Stade Français Paris", "homePts": null, "awayPts": null}
     ]
+  },
+  {
+    "type": "adjustments",
+    "teamAdjustments": {
+      "Stade Toulousain": -2
+    }
   }
 ]
