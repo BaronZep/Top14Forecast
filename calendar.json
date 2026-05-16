@@ -307,7 +307,7 @@
     "round": 24,
     "matches": [
       {"homeTeam": "Section Paloise", "awayTeam": "ASM Clermont", "homeScore": 24, "awayScore": 19, "homePts": 4, "awayPts": 1 },
-      {"homeTeam": "Castres Olympique", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 33, "awayScore": 36, "homePts": 2, "awayPts": 4 },
+      {"homeTeam": "Castres Olympique", "awayTeam": "Montpellier Hérault Rugby", "homeScore": 33, "awayScore": 36, "homePts": 1, "awayPts": 4 },
       {"homeTeam": "LOU Rugby", "awayTeam": "Aviron Bayonnais", "homeScore": 42, "awayScore": 28, "homePts": 4, "awayPts": 0 },
       {"homeTeam": "Racing 92", "awayTeam": "RC Toulon", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
       {"homeTeam": "Stade Rochelais", "awayTeam": "Stade Toulousain", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
