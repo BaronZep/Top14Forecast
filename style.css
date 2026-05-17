@@ -255,7 +255,7 @@ tr {
     background: var(--bg);
     box-shadow: 10px 10px 20px var(--shadow-dark),
                 -10px -10px 20px var(--shadow-light);
-    max-width: 980px;
+    max-width: 920px;
 }
 
 .playoffs-section h2 {

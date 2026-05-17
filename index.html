@@ -6,6 +6,7 @@
 <title>Top 14 Simulator</title>
 <link rel="icon" type="image/svg+xml" href="favicon-brennus.svg">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body>
 <div class="top-bar">
@@ -96,8 +97,19 @@
   </div>
   <div id="montecarlo-section" class="mc-body"></div>
 </div>
-
 </section>
+
+<section class="neumo-card mc-card" style="margin-bottom: 24px;">
+  <div class="mc-header">
+    <div class="mc-title-wrap">
+      <h2>Évolution des Points</h2>
+    </div>
+  </div>
+  <div class="mc-body" style="position: relative; height: 400px; width: 100%;">
+    <canvas id="pointsChart"></canvas>
+  </div>
+</section>
+
 
 <script src="script.js" defer></script>
 </body>

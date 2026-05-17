@@ -13,6 +13,8 @@ let playoffPredictions = {
     finale: null
 };
 let mcLoading = false;
+let chartInstance = null;
+let highlightedTeam = null;
 
 const SYMBOL_TO_CODE = { '-': 0, '0': 1, '1': 2, '2': 3, '4': 4, '5': 5 };
 const CODE_TO_POINTS = { 0: '', 1: 0, 2: 1, 3: 2, 4: 4, 5: 5 };
@@ -256,6 +258,10 @@ function updateDisplay() {
     label.innerText = currentEntry.interlude
         ? currentEntry.title
         : `Journée ${currentEntry.round}`;
+    
+    if (typeof Chart !== 'undefined') {
+        renderChart();
+    }
 }
 
 function getPredictionKey(rIdx, mIdx, teamName) {
@@ -1113,6 +1119,146 @@ async function handleRunSimulation() {
     renderMonteCarloResults();
     updateMonteCarloButtonLabel();
     btn.disabled = false;
+}
+
+function getPointsHistory() {
+    const history = {};
+    const teams = standingsData.map(t => normalizeTeamName(t.name));
+    
+    // Initialisation (J0 avec ajustements éventuels)
+    const adjustments = getTeamAdjustments();
+    teams.forEach(team => {
+        history[team] = { 
+            data: [adjustments[team] || 0]
+        };
+    });
+
+    let currentPoints = { ...adjustments };
+    teams.forEach(t => { if(currentPoints[t] === undefined) currentPoints[t] = 0; });
+    
+    // Point de rupture : à partir de quelle journée passe-t-on en prédiction (pointillé)
+    let firstPredictedRound = null;
+    let roundCounter = 1;
+
+    calendarData.forEach((entry, rIdx) => {
+        if (!isRoundEntry(entry)) return;
+        
+        let hasPrediction = false;
+        
+        entry.matches.forEach((match, mIdx) => {
+            const hTeam = normalizeTeamName(match.homeTeam);
+            const aTeam = normalizeTeamName(match.awayTeam);
+            
+            if (match.homePts !== null && match.awayPts !== null) {
+                currentPoints[hTeam] += match.homePts;
+                currentPoints[aTeam] += match.awayPts;
+            } else {
+                hasPrediction = true;
+                const prediction = getMatchPrediction(rIdx, mIdx);
+                if (prediction) {
+                    currentPoints[hTeam] += prediction.homePts;
+                    currentPoints[aTeam] += prediction.awayPts;
+                }
+            }
+        });
+
+        teams.forEach(team => history[team].data.push(currentPoints[team]));
+        
+        if (hasPrediction && firstPredictedRound === null) {
+            firstPredictedRound = roundCounter;
+        }
+        roundCounter++;
+    });
+
+    return { history, firstPredictedRound };
+}
+
+ function renderChart() {
+    const ctx = document.getElementById('pointsChart');
+    if (!ctx) return;
+
+    const { history, firstPredictedRound } = getPointsHistory();
+    
+    // Récupère le classement actuel/projeté et extrait les noms des équipes dans l'ordre
+    const sortedTeams = getProjectedStandings().map(team => normalizeTeamName(team.name));
+    
+    // Nombres de journées (J0, J1, J2...)
+    const labels = Array.from({length: history[sortedTeams[0]].data.length}, (_, i) => i === 0 ? 'Base' : `J${i}`);
+
+    // Créer les datasets dans le bon ordre
+    const datasets = sortedTeams.map(team => {
+        const isHighlighted = highlightedTeam === team;
+        
+        return {
+            label: team.toUpperCase(),
+            data : history[team].data,
+            borderColor: isHighlighted ? '#cba052' : 'rgba(150, 150, 150, 0.2)',
+            borderWidth: isHighlighted ? 4 : 2,
+            pointRadius: isHighlighted ? 3 : 0, 
+            tension: 0.1, 
+            segment: {
+                borderDash: ctx => {
+                    if (firstPredictedRound !== null && ctx.p0DataIndex >= firstPredictedRound) {
+                        return [5, 5]; 
+                    }
+                    return undefined; 
+                }
+            }
+        };
+    });
+
+    if (chartInstance) {
+        chartInstance.data.labels = labels;
+        chartInstance.data.datasets = datasets;
+        chartInstance.update();
+    } else {
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data : { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false, // <-- Désactive l'animation globale (le highlight sera instantané)
+                layout: {
+                    padding: {
+                        right: 20,
+                        bottom: 10,
+                        left: 10
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8,
+                            padding: 15,
+                            font: { size: 11 },
+                            color: 'var(--text-color)'
+                        },
+                        onClick: (e, legendItem, legend) => {
+                            const clickedTeam = legendItem.text.toLowerCase();
+                            highlightedTeam = highlightedTeam === clickedTeam ? null : clickedTeam;
+                            renderChart(); 
+                        }
+                    },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    x: { ticks: { color: 'var(--text-color)' } },
+                    y: { 
+                        title: { display: true, text: 'Points', color: 'var(--text-color)' },
+                        ticks: { color: 'var(--text-color)' }
+                    }
+                }
+            }
+        });
+    }
 }
 
 window.handlePredict = handlePredict;
