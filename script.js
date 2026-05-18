@@ -1273,15 +1273,16 @@ function updateChartTheme() {
                     tooltip: { enabled: true }
                 },
                 scales: {
-                    x: { ticks: { color: 'var(--text-color)' } },
+                    x: { ticks: { color: 'var(--text)' } },
                     y: { 
-                        title: { display: true, text: 'Points', color: 'var(--text-color)' },
-                        ticks: { color: 'var(--text-color)' }
+                        title: { display: true, text: 'Points', color: 'var(--text)' },
+                        ticks: { color: 'var(--text)' }
                     }
                 }
             }
         });
     }
+    updateChartTheme();
 }
 
 window.handlePredict = handlePredict;
