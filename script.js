@@ -1218,6 +1218,9 @@ function updateHighlights() {
         // On pousse la ligne active au premier plan pour qu'elle passe par-dessus les autres
         dataset.order = isHighlighted ? 1 : 2;
     });
+    if (!lockedTeam && chartInstance.tooltip) {
+        chartInstance.tooltip.setActiveElements([], {x: 0, y: 0});
+    }
     
     chartInstance.update();
 }
@@ -1307,9 +1310,17 @@ function renderChart() {
                             font: { size: 11 },
                             color: 'var(--text)'
                         },
-                        onClick: (e, legendItem) => {
+                        onClick: (e, legendItem, legend) => {
                             const clickedTeam = legendItem.text.toLowerCase();
+                            
+                            // Si on clique sur une NOUVELLE équipe, on ferme l'ancienne infobulle
+                            if (lockedTeam !== clickedTeam && legend.chart.tooltip) {
+                                legend.chart.tooltip.setActiveElements([], {x: 0, y: 0});
+                            }
+                            
                             lockedTeam = lockedTeam === clickedTeam ? null : clickedTeam;
+                            hoveredTeam = null; // Supprime le survol
+                            
                             updateHighlights(); 
                         }
                     }
