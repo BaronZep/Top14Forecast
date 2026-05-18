@@ -1305,21 +1305,39 @@ function renderChart() {
                     legend: {
                         position: 'right',
                         labels: {
-                            boxWidth: 0, // Fait disparaître les ronds de la légende
+                            boxWidth: 0, 
                             padding: 15,
                             font: { size: 11 },
-                            color: 'var(--text)'
+                            // 1. Force l'ordre d'origine de la légende pour éviter que le survol désorganise tout
+                            itemSort: (a, b) => a.datasetIndex - b.datasetIndex,
+                            
+                            // 2. Génère les étiquettes avec la bonne couleur
+                            generateLabels: (chart) => {
+                                // On récupère la couleur par défaut (qui s'adapte au mode sombre grâce à updateChartTheme)
+                                const defaultColor = chart.options.plugins.legend.labels.color || '#444';
+                                
+                                return chart.data.datasets.map((dataset, i) => {
+                                    const team = dataset.label.toLowerCase();
+                                    const isHighlighted = lockedTeam ? (lockedTeam === team) : (hoveredTeam === team);
+                                    
+                                    return {
+                                        text: dataset.label,
+                                        // On passe en doré si sélectionné, sinon couleur classique
+                                        fontColor: isHighlighted ? '#cba052' : defaultColor,
+                                        datasetIndex: i
+                                    };
+                                });
+                            }
                         },
                         onClick: (e, legendItem, legend) => {
                             const clickedTeam = legendItem.text.toLowerCase();
                             
-                            // Si on clique sur une NOUVELLE équipe, on ferme l'ancienne infobulle
                             if (lockedTeam !== clickedTeam && legend.chart.tooltip) {
                                 legend.chart.tooltip.setActiveElements([], {x: 0, y: 0});
                             }
                             
                             lockedTeam = lockedTeam === clickedTeam ? null : clickedTeam;
-                            hoveredTeam = null; // Supprime le survol
+                            hoveredTeam = null; 
                             
                             updateHighlights(); 
                         }
