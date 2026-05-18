@@ -1201,17 +1201,22 @@ function updateHighlights() {
     
     chartInstance.data.datasets.forEach(dataset => {
         const team = dataset.label.toLowerCase();
+        
+        // Si une équipe est verrouillée au clic, c'est elle (et SEULEMENT elle) qui s'allume.
+        // Sinon, on allume l'équipe survolée.
+        const isHighlighted = lockedTeam ? (lockedTeam === team) : (hoveredTeam === team);
         const isLocked = lockedTeam === team;
-        const isHovered = hoveredTeam === team;
-        const isHighlighted = isLocked || isHovered;
 
-        // La ligne passe en surbrillance (or/épaisse) si survolée OU cliquée
+        // La ligne passe en surbrillance
         dataset.borderColor = isHighlighted ? '#cba052' : 'rgba(150, 150, 150, 0.2)';
         dataset.borderWidth = isHighlighted ? 4 : 2;
         
         // Les points (ronds) ne s'affichent QUE si l'équipe est cliquée (verrouillée)
         dataset.pointRadius = isLocked ? 4 : 0;
         dataset.hoverRadius = isLocked ? 6 : 0;
+        
+        // On pousse la ligne active au premier plan pour qu'elle passe par-dessus les autres
+        dataset.order = isHighlighted ? 1 : 2;
     });
     
     chartInstance.update();
