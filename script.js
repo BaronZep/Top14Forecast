@@ -173,6 +173,10 @@ function initUI() {
         document.body.classList.toggle('dark-mode', dark);
         document.body.classList.toggle('light-mode', !dark);
         themeSlider.setAttribute('aria-checked', dark ? 'true' : 'false');
+
+        if (typeof Chart !== 'undefined' && chartInstance) {
+            updateChartTheme();
+        }
     }
 
     applyTheme(prefersDark.matches);
@@ -1172,6 +1176,25 @@ function getPointsHistory() {
 
     return { history, firstPredictedRound };
 }
+
+function updateChartTheme() {
+    if (!chartInstance) return;
+    
+    // On va lire la couleur de texte actuelle calculée par le navigateur
+    const bodyStyles = window.getComputedStyle(document.body);
+    const textColor = bodyStyles.getPropertyValue('--text').trim() || '#444'; // '--text' est la variable de votre CSS
+
+    // Mise à jour de la couleur des axes (x et y)
+    chartInstance.options.scales.x.ticks.color = textColor;
+    chartInstance.options.scales.y.ticks.color = textColor;
+    chartInstance.options.scales.y.title.color = textColor;
+
+    // Mise à jour de la couleur de la légende
+    chartInstance.options.plugins.legend.labels.color = textColor;
+
+    chartInstance.update();
+}
+
 
  function renderChart() {
     const ctx = document.getElementById('pointsChart');
