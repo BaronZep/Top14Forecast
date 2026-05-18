@@ -14,7 +14,8 @@ let playoffPredictions = {
 };
 let mcLoading = false;
 let chartInstance = null;
-let highlightedTeam = null;
+let lockedTeam = null;   
+let hoveredTeam = null;  
 
 const SYMBOL_TO_CODE = { '-': 0, '0': 1, '1': 2, '2': 3, '4': 4, '5': 5 };
 const CODE_TO_POINTS = { 0: '', 1: 0, 2: 1, 3: 2, 4: 4, 5: 5 };
@@ -1195,29 +1196,45 @@ function updateChartTheme() {
     chartInstance.update();
 }
 
+function updateHighlights() {
+    if (!chartInstance) return;
+    
+    chartInstance.data.datasets.forEach(dataset => {
+        const team = dataset.label.toLowerCase();
+        const isLocked = lockedTeam === team;
+        const isHovered = hoveredTeam === team;
+        const isHighlighted = isLocked || isHovered;
 
- function renderChart() {
+        // La ligne passe en surbrillance (or/épaisse) si survolée OU cliquée
+        dataset.borderColor = isHighlighted ? '#cba052' : 'rgba(150, 150, 150, 0.2)';
+        dataset.borderWidth = isHighlighted ? 4 : 2;
+        
+        // Les points (ronds) ne s'affichent QUE si l'équipe est cliquée (verrouillée)
+        dataset.pointRadius = isLocked ? 4 : 0;
+        dataset.hoverRadius = isLocked ? 6 : 0;
+    });
+    
+    chartInstance.update();
+}
+
+function renderChart() {
     const ctx = document.getElementById('pointsChart');
     if (!ctx) return;
 
     const { history, firstPredictedRound } = getPointsHistory();
-    
-    // Récupère le classement actuel/projeté et extrait les noms des équipes dans l'ordre
     const sortedTeams = getProjectedStandings().map(team => normalizeTeamName(team.name));
-    
-    // Nombres de journées (J0, J1, J2...)
     const labels = Array.from({length: history[sortedTeams[0]].data.length}, (_, i) => i === 0 ? 'Base' : `J${i}`);
 
-    // Créer les datasets dans le bon ordre
     const datasets = sortedTeams.map(team => {
-        const isHighlighted = highlightedTeam === team;
-        
         return {
             label: team.toUpperCase(),
-            data : history[team].data,
-            borderColor: isHighlighted ? '#cba052' : 'rgba(150, 150, 150, 0.2)',
-            borderWidth: isHighlighted ? 4 : 2,
-            pointRadius: isHighlighted ? 3 : 0, 
+            data: history[team].data,
+            borderColor: 'rgba(150, 150, 150, 0.2)',
+            borderWidth: 2,
+            pointRadius: 0,
+            hitRadius: 15, // Zone invisible large pour "attraper" la ligne facilement
+            hoverRadius: 0,
+            pointBackgroundColor: '#cba052',
             tension: 0.1, 
             segment: {
                 borderDash: ctx => {
@@ -1233,44 +1250,64 @@ function updateChartTheme() {
     if (chartInstance) {
         chartInstance.data.labels = labels;
         chartInstance.data.datasets = datasets;
-        chartInstance.update();
     } else {
         chartInstance = new Chart(ctx, {
             type: 'line',
-            data : { labels, datasets },
+            data: { labels, datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: false, // <-- Désactive l'animation globale (le highlight sera instantané)
+                animation: false,
                 layout: {
-                    padding: {
-                        right: 20,
-                        bottom: 10,
-                        left: 10
-                    }
+                    padding: { right: 20, bottom: 10, left: 10 }
                 },
                 interaction: {
                     mode: 'nearest',
-                    axis: 'x',
-                    intersect: false
+                    intersect: true
+                },
+                // Action au survol (souris sur PC)
+                onHover: (event, elements, chart) => {
+                    let newHovered = null;
+                    if (elements && elements.length > 0) {
+                        newHovered = chart.data.datasets[elements[0].datasetIndex].label.toLowerCase();
+                    }
+                    // Met à jour seulement si la ligne survolée change
+                    if (hoveredTeam !== newHovered) {
+                        hoveredTeam = newHovered;
+                        updateHighlights();
+                    }
+                },
+                // Action au clic (PC et Mobile)
+                onClick: (event, elements, chart) => {
+                    if (elements && elements.length > 0) {
+                        // Verrouille l'équipe cliquée
+                        lockedTeam = chart.data.datasets[elements[0].datasetIndex].label.toLowerCase();
+                    } else {
+                        // Clic dans le vide = on désélectionne
+                        lockedTeam = null;
+                    }
+                    updateHighlights();
                 },
                 plugins: {
+                    tooltip: { 
+                        enabled: true,
+                        displayColors: false, // Plus de petit carré de couleur
+                        events: ['click'] // L'infobulle ne s'affichera/bougera QUE via un clic !
+                    },
                     legend: {
                         position: 'right',
                         labels: {
-                            usePointStyle: true,
-                            boxWidth: 8,
+                            boxWidth: 0, // Fait disparaître les ronds de la légende
                             padding: 15,
                             font: { size: 11 },
-                            color: 'var(--text-color)'
+                            color: 'var(--text)'
                         },
-                        onClick: (e, legendItem, legend) => {
+                        onClick: (e, legendItem) => {
                             const clickedTeam = legendItem.text.toLowerCase();
-                            highlightedTeam = highlightedTeam === clickedTeam ? null : clickedTeam;
-                            renderChart(); 
+                            lockedTeam = lockedTeam === clickedTeam ? null : clickedTeam;
+                            updateHighlights(); 
                         }
-                    },
-                    tooltip: { enabled: true }
+                    }
                 },
                 scales: {
                     x: { ticks: { color: 'var(--text)' } },
@@ -1282,6 +1319,8 @@ function updateChartTheme() {
             }
         });
     }
+
+    updateHighlights();
     updateChartTheme();
 }
 
