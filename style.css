@@ -527,12 +527,6 @@ tr {
     width: 100%;
 }
 
-.mc-body {
-    position: relative;
-    width: 100%;
-    overflow-x: auto;
-}
-
 .mc-overlay {
     position: absolute;
     inset: 0;
@@ -865,30 +859,14 @@ tr {
     transform: translateX(-50%) translateY(0);
 }
 
-@media (max-width: 700px) {
-    .mc-title-wrap {
-        flex-wrap: wrap;
-    }
-
-    .info-tooltip-box {
-        left: 50%;
-        transform: translateX(-50%) translateY(6px);
-        width: min(340px, calc(100vw - 40px));
-    }
-
-    .info-tooltip-box::after {
-        left: 50%;
-        transform: translateX(-50%) rotate(45deg);
-    }
-
-    .info-tooltip-trigger:hover + .info-tooltip-box,
-    .info-tooltip-trigger:focus-visible + .info-tooltip-box,
-    .info-tooltip-wrap:hover .info-tooltip-box {
-        transform: translateX(0) translateY(0);
-    }
-}
-
+/* ── MEDIA QUERIES TABLETTE / INTERMÉDIAIRE ── */
 @media (max-width: 900px) {
+    .neumo-card, .playoffs-section {
+        /* Correction Ombres : Moins volumineuses pour ne pas déborder */
+        box-shadow: 4px 4px 10px var(--shadow-dark),
+                    -4px -4px 10px var(--shadow-light);
+    }
+
     .playoffs-bracket {
         grid-template-columns: 1fr;
     }
@@ -937,9 +915,48 @@ tr {
     }
 }
 
+/* ── MEDIA QUERIES MOBILE ── */
 @media (max-width: 700px) {
     body {
+        padding: 12px; /* Un peu plus compact */
+    }
+
+    .neumo-card, .playoffs-section {
+        /* Ombres minimales sur mobile pour couper net le scroll fantôme */
+        box-shadow: 3px 3px 6px var(--shadow-dark),
+                    -3px -3px 6px var(--shadow-light);
         padding: 14px;
+    }
+
+    .match-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        text-align: center;
+        /* Ombre allégée aussi sur les lignes de match */
+        box-shadow: 2px 2px 5px var(--shadow-dark),
+                    -2px -2px 5px var(--shadow-light);
+    }
+
+    .mc-title-wrap {
+        flex-wrap: wrap;
+    }
+
+    /* Correction Tooltip : Parfaitement centré par rapport à son icône parent */
+    .info-tooltip-box {
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        width: min(340px, calc(100vw - 32px));
+    }
+
+    .info-tooltip-box::after {
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+    }
+
+    .info-tooltip-trigger:hover + .info-tooltip-box,
+    .info-tooltip-trigger:focus-visible + .info-tooltip-box,
+    .info-tooltip-wrap:hover .info-tooltip-box {
+        transform: translateX(-50%) translateY(0);
     }
 
     .matches-card-shell {
@@ -961,12 +978,6 @@ tr {
         padding: 12px 10px;
     }
 
-    .match-row {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        text-align: center;
-    }
-
     .team-home,
     .team-away {
         text-align: center;
@@ -977,8 +988,7 @@ tr {
     }
 }
 
-
-
+/* ── Toolbar Hex-Code predictions ── */
 .prediction-hex-toolbar {
   margin-top: 1rem;
   padding: 0.65rem 0.8rem 0.55rem;
