@@ -724,60 +724,42 @@ function computeCriteriaForGroup(group) {
     ];
 }
 
-function sortTiedGroup(group) {
-    if (group.length <= 1) return group;
-    const criteria = computeCriteriaForGroup(group);
-    for (const crit of criteria) {
+// Linear progressive tie-break: apply criteria in order WITHOUT restarting.
+// Once a criterion splits the teams, still-tied sub-groups continue to the NEXT
+// criterion (they do not re-evaluate earlier criteria). Returns the ordered teams
+// and, if `out` is provided, fills it with per-team decisive info for badges.
+function resolveTieGroup(teams, criteria, startCi, out) {
+    if (teams.length === 1) return teams;
+    for (let ci = startCi; ci < criteria.length; ci++) {
+        const crit = criteria[ci];
         if (!crit.available || !crit.values) continue;
-        const vals = group.map(t => crit.values.get(t.name));
+        const vals = teams.map(t => crit.values.get(t.name));
         if (vals.some(v => v === null)) continue;
         if (new Set(vals).size === 1) continue;
 
-        const sorted = [...group].sort((a, b) => {
-            const d = crit.values.get(b.name) - crit.values.get(a.name);
-            return d !== 0 ? d : normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name));
-        });
+        const subMax = Math.max(...vals);
+        const distinctVals = [...new Set(vals)].sort((a, b) => b - a);
         const result = [];
-        let si = 0;
-        while (si < sorted.length) {
-            let sj = si + 1;
-            const vi = crit.values.get(sorted[si].name);
-            while (sj < sorted.length && crit.values.get(sorted[sj].name) === vi) sj++;
-            result.push(...(sj - si > 1 ? sortTiedGroup(sorted.slice(si, sj)) : [sorted[si]]));
-            si = sj;
+        for (const val of distinctVals) {
+            const bucket = teams.filter(t => crit.values.get(t.name) === val);
+            if (bucket.length === 1) {
+                if (out) out.set(bucket[0].name, { type: 'E', decisiveCritIdx: ci, decisiveValue: val, decisiveWinner: val === subMax });
+                result.push(bucket[0]);
+            } else {
+                result.push(...resolveTieGroup(bucket, criteria, ci + 1, out));
+            }
         }
         return result;
     }
-    return [...group].sort((a, b) => normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name)));
+    // No remaining criterion can separate these teams: still tied (E!)
+    const alpha = [...teams].sort((a, b) => normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name)));
+    if (out) alpha.forEach(t => out.set(t.name, { type: 'E!', decisiveCritIdx: -1, decisiveValue: null, decisiveWinner: false }));
+    return alpha;
 }
 
-// Recursive helper: assigns per-team {type, decisiveCritIdx} using full-group criteria values
-// but navigating sub-groups to find each team's actual decisive criterion.
-function assignDecisivePerTeam(subGroup, criteria, out) {
-    if (subGroup.length <= 1) return;
-    for (let ci = 0; ci < criteria.length; ci++) {
-        const crit = criteria[ci];
-        if (!crit.available || !crit.values) continue;
-        const vals = subGroup.map(t => crit.values.get(t.name));
-        if (vals.some(v => v === null)) continue;
-        if (new Set(vals).size === 1) continue;
-        // This criterion separates at least some teams in this sub-group
-        const subMap = new Map();
-        subGroup.forEach(t => {
-            const v = crit.values.get(t.name);
-            if (!subMap.has(v)) subMap.set(v, []);
-            subMap.get(v).push(t);
-        });
-        subMap.forEach(sub => {
-            if (sub.length === 1) {
-                out.set(sub[0].name, { type: 'E', decisiveCritIdx: ci });
-            } else {
-                assignDecisivePerTeam(sub, criteria, out);
-            }
-        });
-        return;
-    }
-    subGroup.forEach(t => out.set(t.name, { type: 'E!', decisiveCritIdx: -1 }));
+function sortTiedGroup(group) {
+    if (group.length <= 1) return group;
+    return resolveTieGroup(group, computeCriteriaForGroup(group), 0, null);
 }
 
 function computeTieBadges(standings) {
@@ -788,13 +770,14 @@ function computeTieBadges(standings) {
         while (j < standings.length && standings[j].points === standings[i].points) j++;
         if (j - i > 1) {
             const group = standings.slice(i, j);
-            const criteria = computeCriteriaForGroup(group); // computed once for the full group
+            const criteria = computeCriteriaForGroup(group);
             const perTeam = new Map();
-            assignDecisivePerTeam(group, criteria, perTeam);
+            resolveTieGroup(group, criteria, 0, perTeam);
             const groupDecisive = new Map(group.map(t => [t.name, perTeam.get(t.name).decisiveCritIdx]));
+            const groupDecisiveWinner = new Map(group.map(t => [t.name, perTeam.get(t.name).decisiveWinner]));
             group.forEach(team => {
                 const { type, decisiveCritIdx } = perTeam.get(team.name);
-                badges.set(team.name, { type, compareGroup: group, decisiveCritIdx, criteria, groupDecisive });
+                badges.set(team.name, { type, compareGroup: group, decisiveCritIdx, criteria, groupDecisive, groupDecisiveWinner });
             });
         }
         i = j;
@@ -810,32 +793,22 @@ function fmtCritVal(key, v) {
 
 function renderTieBadge(teamName, badge) {
     if (!badge) return '';
-    const { type, compareGroup, decisiveCritIdx, criteria, groupDecisive } = badge;
+    const { type, compareGroup, decisiveCritIdx, criteria, groupDecisive, groupDecisiveWinner } = badge;
     const isAlert = type === 'E!';
 
     const teamNames = compareGroup.map(t => t.name);
     const shorts = teamNames.map(shortTeamName);
 
-    // Find the column index of the max value in the decisive row (for gold highlight)
-    let winnerIdx = -1;
-    if (decisiveCritIdx >= 0) {
-        const dc = criteria[decisiveCritIdx];
-        if (dc.values) {
-            let maxVal = -Infinity;
-            teamNames.forEach((n, idx) => {
-                const v = dc.values.get(n);
-                if (v !== null && v !== undefined && v > maxVal) { maxVal = v; winnerIdx = idx; }
-            });
-        }
-    }
-
     const LABEL_W = 108, VAL_W = 46;
     const cols = `${LABEL_W}px ${teamNames.map(() => `${VAL_W}px`).join(' ')}`;
+
+    // Per-column gold: a team's name is gold if it ranks first in its sub-group split
+    const headerGold = teamNames.map(n => groupDecisiveWinner?.get(n) === true);
 
     const headerCells =
         `<div class="tc-th-label"></div>` +
         shorts.map((s, idx) => {
-            const gold = idx === winnerIdx ? ` style="color:#cba052;opacity:1"` : '';
+            const gold = headerGold[idx] ? ` style="color:#cba052;opacity:1"` : '';
             return `<div class="tc-th"${gold}>${s}</div>`;
         }).join('');
 
@@ -854,9 +827,10 @@ function renderTieBadge(teamName, badge) {
 
         const labelDiv = `<div class="tc-label-cell ${rowClass}"><span class="tc-rank">${ci + 1}</span>${crit.label}</div>`;
         const valDivs = teamNames.map((n, idx) => {
-            const v = (crit.values && crit.available) ? crit.values.get(n) : null;
             const isTeamDecisive = ci === (groupDecisive?.get(n) ?? -1);
-            const isGold = isTeamDecisive && idx === winnerIdx;
+            // Always show the full-group value (complete H2H against all concerned teams).
+            const v = (crit.values && crit.available) ? crit.values.get(n) : null;
+            const isGold = isTeamDecisive && headerGold[idx];
             let style = '';
             if (isGold)              style = 'color:#cba052;font-weight:700';
             else if (isTeamDecisive) style = 'font-weight:700';

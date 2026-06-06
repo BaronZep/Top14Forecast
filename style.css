@@ -52,6 +52,7 @@ body {
     margin: 0;
     padding: 20px;
     transition: background 0.3s ease;
+    overflow-x: hidden;
 }
 
 .top-bar {
