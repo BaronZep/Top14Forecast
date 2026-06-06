@@ -871,14 +871,14 @@ tr {
     }
 
     .info-tooltip-box {
-        left: 0;
-        transform: translateX(0) translateY(6px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
         width: min(340px, calc(100vw - 40px));
     }
 
     .info-tooltip-box::after {
-        left: 24px;
-        transform: rotate(45deg);
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
     }
 
     .info-tooltip-trigger:hover + .info-tooltip-box,
