@@ -249,7 +249,7 @@ tr {
 }
 
 .playoffs-section {
-    margin: 0 auto 28px;
+    margin: 28px auto 28px;
     padding: 20px 24px;
     border-radius: 16px;
     background: var(--bg);
@@ -610,30 +610,150 @@ tr {
 
 .mc-table th:nth-child(2),
 .mc-table td:nth-child(2) {
-    width: 26%;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    width: 32px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
 }
 
 .mc-table th:nth-child(3),
 .mc-table td:nth-child(3) {
+    width: 26%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: visible;
+    padding-left: 0;
+}
+
+.mc-table th:nth-child(4),
+.mc-table td:nth-child(4) {
     width: 150px;
     white-space: nowrap;
 }
 
-.mc-table th:nth-child(4),
-.mc-table td:nth-child(4),
 .mc-table th:nth-child(5),
 .mc-table td:nth-child(5),
 .mc-table th:nth-child(6),
 .mc-table td:nth-child(6),
 .mc-table th:nth-child(7),
-.mc-table td:nth-child(7) {
+.mc-table td:nth-child(7),
+.mc-table th:nth-child(8),
+.mc-table td:nth-child(8) {
     width: 82px;
     white-space: nowrap;
 }
+
+.tie-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tie-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 20px;
+    padding: 0 4px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: help;
+    user-select: none;
+    letter-spacing: 0;
+}
+
+.tie-badge-resolved {
+    background: #cba052;
+    color: #fff;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+}
+
+.tie-badge-alert {
+    background: #cba052;
+    color: #000;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+
+.tie-box {
+    position: fixed;
+    width: max-content;
+    max-width: min(340px, calc(100vw - 20px));
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: 6px 6px 14px var(--shadow-dark), -6px -6px 14px var(--shadow-light);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    text-align: left;
+    white-space: normal;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    transition: opacity 0.12s ease, visibility 0.12s ease;
+}
+
+.tie-box::after {
+    content: "";
+    position: absolute;
+    left: var(--tie-arrow-left, 14px);
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--bg);
+    transform: translateY(-50%) rotate(45deg);
+    box-shadow: -2px -2px 4px var(--shadow-dark);
+}
+
+.tie-grid {
+    display: grid;
+    margin-top: 2px;
+}
+
+.tie-grid > * {
+    padding: 2px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tc-th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0.6;
+}
+
+.tc-th-label { text-align: left; opacity: 1; }
+
+.tc-val { text-align: center; font-size: 0.78rem; }
+.tc-label-cell { text-align: left; font-size: 0.72rem; padding-right: 10px; }
+
+.tc-rank {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0.45;
+    margin-right: 3px;
+    font-variant-numeric: tabular-nums;
+    min-width: 10px;
+}
+
+.tie-footnote {
+    margin-top: 5px;
+    font-size: 0.62rem;
+    opacity: 0.18;
+}
+
+.tc-equal         { opacity: 0.45; }
+.tc-prior-partial { opacity: 0.65; }
+.tc-decisive      { opacity: 1; }
+.tc-grayed        { opacity: 0.22; }
+.tc-unavail       { opacity: 0.18; }
 
 .pts-breakdown {
     display: inline-block;
@@ -799,19 +919,19 @@ tr {
         padding: 7px 6px;
     }
 
-    .mc-table th:nth-child(3),
-    .mc-table td:nth-child(3) {
+    .mc-table th:nth-child(4),
+    .mc-table td:nth-child(4) {
         width: 138px;
     }
 
-    .mc-table th:nth-child(4),
-    .mc-table td:nth-child(4),
     .mc-table th:nth-child(5),
     .mc-table td:nth-child(5),
     .mc-table th:nth-child(6),
     .mc-table td:nth-child(6),
     .mc-table th:nth-child(7),
-    .mc-table td:nth-child(7) {
+    .mc-table td:nth-child(7),
+    .mc-table th:nth-child(8),
+    .mc-table td:nth-child(8) {
         width: 74px;
     }
 }

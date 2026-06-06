@@ -166,6 +166,39 @@ async function loadData() {
     }
 }
 
+function initTieBadgeTooltips() {
+    document.addEventListener('mouseover', e => {
+        const badge = e.target.closest('.tie-badge');
+        if (!badge) return;
+        const box = badge.parentElement?.querySelector('.tie-box');
+        if (!box) return;
+
+        const rect = badge.getBoundingClientRect();
+        const boxWidth = Math.min(380, window.innerWidth - 20);
+
+        let left = rect.left;
+        if (left + boxWidth > window.innerWidth - 10) left = window.innerWidth - boxWidth - 10;
+        if (left < 10) left = 10;
+
+        const arrowLeft = Math.max(8, Math.min(rect.left + rect.width / 2 - left, boxWidth - 18));
+
+        box.style.left = left + 'px';
+        box.style.top = (rect.bottom + 8) + 'px';
+        box.style.setProperty('--tie-arrow-left', arrowLeft + 'px');
+        box.style.visibility = 'visible';
+        box.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseout', e => {
+        const badge = e.target.closest('.tie-badge');
+        if (!badge) return;
+        const box = badge.parentElement?.querySelector('.tie-box');
+        if (!box) return;
+        box.style.visibility = 'hidden';
+        box.style.opacity = '0';
+    });
+}
+
 function initUI() {
     const themeSlider = document.getElementById('themeToggle');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -225,6 +258,7 @@ function initUI() {
         });
     }
 
+    initTieBadgeTooltips();
     updateMonteCarloButtonLabel();
     updateDisplay();
 }
@@ -555,20 +589,286 @@ function getProjectedStandings() {
         });
     });
 
-    live.sort((a, b) => {
-        if (b.points !== a.points) {
-            return b.points - a.points;
-        }
+    live.sort((a, b) => b.points - a.points);
 
-        const h2h = calculateHeadToHead(a.name, b.name);
-        if (h2h.ptsA !== h2h.ptsB) {
-            return h2h.ptsB - h2h.ptsA;
+    let i = 0;
+    while (i < live.length) {
+        let j = i + 1;
+        while (j < live.length && live[j].points === live[i].points) j++;
+        if (j - i > 1) {
+            const sorted = sortTiedGroup(live.slice(i, j));
+            for (let k = 0; k < sorted.length; k++) live[i + k] = sorted[k];
         }
-
-        return normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name));
-    });
+        i = j;
+    }
 
     return live;
+}
+
+// --- Tie-breaking helpers (LNR criteria order) ---
+
+const TIE_SHORT_NAMES = {
+    'Stade Toulousain': 'ST',
+    'Stade Rochelais': 'SR',
+    'Stade Français Paris': 'SFP',
+    'Union Bordeaux-Bègles': 'UBB',
+    'ASM Clermont': 'ASM',
+    'Montpellier Hérault Rugby': 'MHR',
+    'Section Paloise': 'SP',
+    'LOU Rugby': 'LOU',
+    'RC Toulon': 'RCT',
+    'Aviron Bayonnais': 'AB',
+    'Racing 92': 'R92',
+    'Castres Olympique': 'CO',
+    'USA Perpignan': 'USAP',
+    'US Montauban': 'USM',
+};
+function shortTeamName(name) { return TIE_SHORT_NAMES[name] || name; }
+
+function calculateHeadToHeadWithScore(teamA, teamB) {
+    const normA = normalizeTeamName(teamA);
+    const normB = normalizeTeamName(teamB);
+    let ptsA = 0, ptsB = 0, scoreA = 0, scoreB = 0, hasScore = false;
+
+    calendarData.forEach((round, rIdx) => {
+        if (!isRoundEntry(round)) return;
+        round.matches.forEach((match, mIdx) => {
+            const mHome = normalizeTeamName(match.homeTeam);
+            const mAway = normalizeTeamName(match.awayTeam);
+            if (!((mHome === normA && mAway === normB) || (mHome === normB && mAway === normA))) return;
+
+            let hp = match.homePts, ap = match.awayPts;
+            if (hp === null || ap === null) {
+                const pred = getMatchPrediction(rIdx, mIdx);
+                if (!pred) return;
+                hp = pred.homePts; ap = pred.awayPts;
+            }
+            if (mHome === normA) { ptsA += hp; ptsB += ap; } else { ptsA += ap; ptsB += hp; }
+
+            if (match.homeScore !== null && match.awayScore !== null) {
+                hasScore = true;
+                if (mHome === normA) { scoreA += match.homeScore; scoreB += match.awayScore; }
+                else                 { scoreA += match.awayScore; scoreB += match.homeScore; }
+            }
+        });
+    });
+    return { ptsA, ptsB, scoreA, scoreB, hasScore };
+}
+
+function computeGeneralScoreStats(names) {
+    const normMap = new Map(names.map(n => [normalizeTeamName(n), n]));
+    const stats = Object.fromEntries(names.map(n => [n, { diff: 0, scored: 0 }]));
+    calendarData.forEach(round => {
+        if (!isRoundEntry(round)) return;
+        round.matches.forEach(match => {
+            if (match.homeScore === null || match.awayScore === null) return;
+            const hn = normMap.get(normalizeTeamName(match.homeTeam));
+            const an = normMap.get(normalizeTeamName(match.awayTeam));
+            if (hn) { stats[hn].diff += match.homeScore - match.awayScore; stats[hn].scored += match.homeScore; }
+            if (an) { stats[an].diff += match.awayScore - match.homeScore; stats[an].scored += match.awayScore; }
+        });
+    });
+    return stats;
+}
+
+function computeCriteriaForGroup(group) {
+    const names = group.map(t => t.name);
+
+    // Keys always in alphabetical order so lookup is consistent
+    const pairH2H = new Map();
+    for (let a = 0; a < group.length; a++)
+        for (let b = a + 1; b < group.length; b++) {
+            const na = group[a].name, nb = group[b].name;
+            const raw = calculateHeadToHeadWithScore(na, nb);
+            if (na < nb) {
+                pairH2H.set(`${na}||${nb}`, raw);
+            } else {
+                pairH2H.set(`${nb}||${na}`, { ptsA: raw.ptsB, ptsB: raw.ptsA, scoreA: raw.scoreB, scoreB: raw.scoreA, hasScore: raw.hasScore });
+            }
+        }
+
+    const h2hPts = new Map(), h2hDiff = new Map();
+    let anyH2HScore = false;
+    names.forEach(name => {
+        let pts = 0, diff = 0, hasScore = false;
+        names.forEach(other => {
+            if (other === name) return;
+            const key = name < other ? `${name}||${other}` : `${other}||${name}`;
+            const h = pairH2H.get(key);
+            const first = name < other;
+            pts += first ? h.ptsA : h.ptsB;
+            if (h.hasScore) {
+                hasScore = true;
+                diff += first ? h.scoreA - h.scoreB : h.scoreB - h.scoreA;
+            }
+        });
+        h2hPts.set(name, pts);
+        h2hDiff.set(name, hasScore ? diff : null);
+        if (hasScore) anyH2HScore = true;
+    });
+
+    const gen = computeGeneralScoreStats(names);
+    const genDiff   = new Map(names.map(n => [n, gen[n].diff]));
+    const genScored = new Map(names.map(n => [n, gen[n].scored]));
+
+    return [
+        { key: 'h2hPts',      label: 'Pts H2H',          values: h2hPts,    available: true },
+        { key: 'genDiff',     label: 'G-A gén.',          values: genDiff,   available: true },
+        { key: 'h2hDiff',     label: 'G-A H2H',           values: h2hDiff,   available: anyH2HScore },
+        { key: 'h2hEssais',   label: 'Diff. ess. H2H',    values: null,      available: false },
+        { key: 'genEssais',   label: 'Diff. ess. gén.',   values: null,      available: false },
+        { key: 'genScored',   label: 'Pts gén.',           values: genScored, available: true },
+        { key: 'essaisGen',   label: 'Ess. gén.',          values: null,      available: false },
+        { key: 'forfaits',    label: 'Forfaits',           values: null,      available: false },
+        { key: 'saisonPrec',  label: 'Saison préc.',       values: null,      available: false },
+    ];
+}
+
+function sortTiedGroup(group) {
+    if (group.length <= 1) return group;
+    const criteria = computeCriteriaForGroup(group);
+    for (const crit of criteria) {
+        if (!crit.available || !crit.values) continue;
+        const vals = group.map(t => crit.values.get(t.name));
+        if (vals.some(v => v === null)) continue;
+        if (new Set(vals).size === 1) continue;
+
+        const sorted = [...group].sort((a, b) => {
+            const d = crit.values.get(b.name) - crit.values.get(a.name);
+            return d !== 0 ? d : normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name));
+        });
+        const result = [];
+        let si = 0;
+        while (si < sorted.length) {
+            let sj = si + 1;
+            const vi = crit.values.get(sorted[si].name);
+            while (sj < sorted.length && crit.values.get(sorted[sj].name) === vi) sj++;
+            result.push(...(sj - si > 1 ? sortTiedGroup(sorted.slice(si, sj)) : [sorted[si]]));
+            si = sj;
+        }
+        return result;
+    }
+    return [...group].sort((a, b) => normalizeTeamName(a.name).localeCompare(normalizeTeamName(b.name)));
+}
+
+// Recursive helper: assigns per-team {type, decisiveCritIdx} using full-group criteria values
+// but navigating sub-groups to find each team's actual decisive criterion.
+function assignDecisivePerTeam(subGroup, criteria, out) {
+    if (subGroup.length <= 1) return;
+    for (let ci = 0; ci < criteria.length; ci++) {
+        const crit = criteria[ci];
+        if (!crit.available || !crit.values) continue;
+        const vals = subGroup.map(t => crit.values.get(t.name));
+        if (vals.some(v => v === null)) continue;
+        if (new Set(vals).size === 1) continue;
+        // This criterion separates at least some teams in this sub-group
+        const subMap = new Map();
+        subGroup.forEach(t => {
+            const v = crit.values.get(t.name);
+            if (!subMap.has(v)) subMap.set(v, []);
+            subMap.get(v).push(t);
+        });
+        subMap.forEach(sub => {
+            if (sub.length === 1) {
+                out.set(sub[0].name, { type: 'E', decisiveCritIdx: ci });
+            } else {
+                assignDecisivePerTeam(sub, criteria, out);
+            }
+        });
+        return;
+    }
+    subGroup.forEach(t => out.set(t.name, { type: 'E!', decisiveCritIdx: -1 }));
+}
+
+function computeTieBadges(standings) {
+    const badges = new Map();
+    let i = 0;
+    while (i < standings.length) {
+        let j = i + 1;
+        while (j < standings.length && standings[j].points === standings[i].points) j++;
+        if (j - i > 1) {
+            const group = standings.slice(i, j);
+            const criteria = computeCriteriaForGroup(group); // computed once for the full group
+            const perTeam = new Map();
+            assignDecisivePerTeam(group, criteria, perTeam);
+            const groupDecisive = new Map(group.map(t => [t.name, perTeam.get(t.name).decisiveCritIdx]));
+            group.forEach(team => {
+                const { type, decisiveCritIdx } = perTeam.get(team.name);
+                badges.set(team.name, { type, compareGroup: group, decisiveCritIdx, criteria, groupDecisive });
+            });
+        }
+        i = j;
+    }
+    return badges;
+}
+
+function fmtCritVal(key, v) {
+    if (v === null || v === undefined) return '—';
+    if (key === 'genDiff' || key === 'h2hDiff') return (v >= 0 ? '+' : '') + v;
+    return String(v);
+}
+
+function renderTieBadge(teamName, badge) {
+    if (!badge) return '';
+    const { type, compareGroup, decisiveCritIdx, criteria, groupDecisive } = badge;
+    const isAlert = type === 'E!';
+
+    const teamNames = compareGroup.map(t => t.name);
+    const shorts = teamNames.map(shortTeamName);
+
+    // Find the column index of the max value in the decisive row (for gold highlight)
+    let winnerIdx = -1;
+    if (decisiveCritIdx >= 0) {
+        const dc = criteria[decisiveCritIdx];
+        if (dc.values) {
+            let maxVal = -Infinity;
+            teamNames.forEach((n, idx) => {
+                const v = dc.values.get(n);
+                if (v !== null && v !== undefined && v > maxVal) { maxVal = v; winnerIdx = idx; }
+            });
+        }
+    }
+
+    const LABEL_W = 108, VAL_W = 46;
+    const cols = `${LABEL_W}px ${teamNames.map(() => `${VAL_W}px`).join(' ')}`;
+
+    const headerCells =
+        `<div class="tc-th-label"></div>` +
+        shorts.map((s, idx) => {
+            const gold = idx === winnerIdx ? ` style="color:#cba052;opacity:1"` : '';
+            return `<div class="tc-th"${gold}>${s}</div>`;
+        }).join('');
+
+    const dataCells = criteria.flatMap((crit, ci) => {
+        let rowClass;
+        if (!crit.available || !crit.values) {
+            rowClass = 'tc-unavail';
+        } else if (ci === decisiveCritIdx) {
+            rowClass = 'tc-decisive';
+        } else if (decisiveCritIdx >= 0 && ci > decisiveCritIdx) {
+            rowClass = 'tc-grayed';
+        } else {
+            const vals = teamNames.map(n => crit.values.get(n));
+            rowClass = new Set(vals).size === 1 ? 'tc-equal' : 'tc-prior-partial';
+        }
+
+        const labelDiv = `<div class="tc-label-cell ${rowClass}"><span class="tc-rank">${ci + 1}</span>${crit.label}</div>`;
+        const valDivs = teamNames.map((n, idx) => {
+            const v = (crit.values && crit.available) ? crit.values.get(n) : null;
+            const isTeamDecisive = ci === (groupDecisive?.get(n) ?? -1);
+            const isGold = isTeamDecisive && idx === winnerIdx;
+            let style = '';
+            if (isGold)              style = 'color:#cba052;font-weight:700';
+            else if (isTeamDecisive) style = 'font-weight:700';
+            return `<div class="tc-val ${rowClass}"${style ? ` style="${style}"` : ''}>${fmtCritVal(crit.key, v)}</div>`;
+        });
+        return [labelDiv, ...valDivs];
+    }).join('');
+
+    const table = `<div class="tie-grid" style="grid-template-columns:${cols}">${headerCells}${dataCells}</div>`
+        + `<div class="tie-footnote">— Données non disponibles</div>`;
+    const badgeClass = isAlert ? 'tie-badge tie-badge-alert' : 'tie-badge tie-badge-resolved';
+    return `<span class="tie-wrap"><span class="${badgeClass}" tabindex="0">${type}</span><span class="tie-box">${table}</span></span>`;
 }
 
 function calculateHeadToHead(teamA, teamB) {
@@ -1041,6 +1341,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
     if (!section) return;
 
     const standings = getProjectedStandings();
+    const tieBadges = computeTieBadges(standings);
     const deltaMap = getProjectedDeltaMap();
     const staleBadge = monteCarloResultsStale
         ? `<div class="mc-warning">Pourcentages à recalculer</div>`
@@ -1068,6 +1369,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th></th>
                             <th style="text-align:left">Équipe</th>
                             <th>Pts</th>
                             <th title="Places 1-2 — Demi-finale directe">1-2</th>
@@ -1087,6 +1389,7 @@ function renderMonteCarloResults(results = monteCarloResults) {
 
                             return `<tr>
                                 <td><span class="pos-badge ${cls}">${i + 1}</span></td>
+                                <td>${renderTieBadge(team.name, tieBadges.get(team.name))}</td>
                                 <td style="text-align:left">${team.name}</td>
                                 <td>
                                     <strong>${team.points}</strong>
