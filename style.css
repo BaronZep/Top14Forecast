@@ -97,7 +97,7 @@ body {
 @media (max-width: 700px) {
     .season-title {
         font-size: 3.8rem;
-        transform: translateY(22px);
+        transform: translateY(11px);
     }
 }
 
