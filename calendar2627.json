@@ -1,0 +1,340 @@
+[
+  {
+    "round": 1,
+    "date": "Samedi 5 septembre 2026",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "RC Toulon",                 "homeScore": 27,   "awayScore": 26,   "homePts": 4,    "awayPts": 1 },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "RC Vannes",                 "homeScore": 29,   "awayScore": 20,   "homePts": 4,    "awayPts": 0 },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "ASM Clermont",              "homeScore": 40,   "awayScore": 36,   "homePts": 4,    "awayPts": 1 },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Section Paloise",           "homeScore": 19,   "awayScore": 27,   "homePts": 0,    "awayPts": 4 },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "USA Perpignan",             "homeScore": 28,   "awayScore": 26,   "homePts": 4,    "awayPts": 1 },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Racing 92",                 "homeScore": 64,   "awayScore": 5,    "homePts": 5,    "awayPts": 0 },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Stade Toulousain",          "homeScore": 30,   "awayScore": 27,   "homePts": 4,    "awayPts": 1 }
+    ]
+  },
+  {
+    "round": 2,
+    "date": "Samedi 12 septembre 2026",
+    "matches": [
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Stade Français Paris",      "homeScore": 25,   "awayScore": 16,   "homePts": 4,    "awayPts": 0 },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Aviron Bayonnais",          "homeScore": 70,   "awayScore": 28,   "homePts": 5,    "awayPts": 0 },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Castres Olympique",         "homeScore": 43,   "awayScore": 29,   "homePts": 4,    "awayPts": 0 },
+      { "homeTeam": "Racing 92",                 "awayTeam": "LOU Rugby",                 "homeScore": 31,   "awayScore": 48,   "homePts": 0,    "awayPts": 5 },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Montpellier Hérault Rugby", "homeScore": 12,   "awayScore": 26,   "homePts": 0,    "awayPts": 4 },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Stade Rochelais",           "homeScore": 20,   "awayScore": 21,   "homePts": 1,    "awayPts": 4 },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Union Bordeaux-Bègles",     "homeScore": 48,   "awayScore": 12,   "homePts": 5,    "awayPts": 0 }
+    ]
+  },
+  {
+    "round": 3,
+    "date": "Samedi 19 septembre 2026",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "RC Toulon",                 "homeScore": 29,   "awayScore": 27,   "homePts": 4,    "awayPts": 1 },
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "ASM Clermont",              "homeScore": 46,   "awayScore": 24,   "homePts": 5,    "awayPts": 0 },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Racing 92",                 "homeScore": 10,   "awayScore": 20,   "homePts": 0,    "awayPts": 4 },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Section Paloise",           "homeScore": 51,   "awayScore": 25,   "homePts": 5,    "awayPts": 0 },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "USA Perpignan",             "homeScore": 50,   "awayScore": 13,   "homePts": 5,    "awayPts": 0 },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Stade Toulousain",          "homeScore": 23,   "awayScore": 29,   "homePts": 0,    "awayPts": 4 },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Stade Français Paris",      "homeScore": 40,   "awayScore": 10,   "homePts": 5,    "awayPts": 0 }
+    ]
+  },
+  {
+    "round": 4,
+    "date": "Samedi 26 septembre 2026",
+    "matches": [
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 5,
+    "date": "Samedi 3 octobre 2026",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 6,
+    "date": "Samedi 10 octobre 2026",
+    "matches": [
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 7,
+    "date": "Samedi 24 octobre 2026",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 8,
+    "date": "Samedi 31 octobre 2026",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 9,
+    "date": "Samedi 7 novembre 2026",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 10,
+    "date": "Samedi 28 novembre 2026",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 11,
+    "date": "Samedi 5 décembre 2026",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 12,
+    "date": "Samedi 19 décembre 2026",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 13,
+    "date": "Samedi 26 décembre 2026",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 14,
+    "date": "Samedi 2 janvier 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 15,
+    "date": "Samedi 23 janvier 2027",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 16,
+    "date": "Samedi 30 janvier 2027",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 17,
+    "date": "Samedi 20 février 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 18,
+    "date": "Samedi 27 février 2027",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 19,
+    "date": "Samedi 20 mars 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 20,
+    "date": "Samedi 27 mars 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 21,
+    "date": "Samedi 17 avril 2027",
+    "matches": [
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 22,
+    "date": "Samedi 24 avril 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 23,
+    "date": "Samedi 8 mai 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 24,
+    "date": "Samedi 15 mai 2027",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 25,
+    "date": "Samedi 29 mai 2027",
+    "matches": [
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  },
+  {
+    "round": 26,
+    "date": "Samedi 5 juin 2027",
+    "matches": [
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Section Paloise",           "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "Racing 92",                 "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+    ]
+  }
+]

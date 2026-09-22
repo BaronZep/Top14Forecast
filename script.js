@@ -129,7 +129,7 @@ function updateStandingsSyncWarning() {
         .join(', ');
 
     standingsSyncWarning =
-        `Classement incohérent avec calendar.json — mettre à jour standings.json` +
+        `Classement incohérent avec calendar2627.json — mettre à jour standings2627.json` +
         `${preview ? ` : ${preview}` : ''}` +
         `${mismatches.length > 3 ? '…' : ''}`;
 }
@@ -137,8 +137,8 @@ function updateStandingsSyncWarning() {
 async function loadData() {
     try {
         const [sRes, cRes] = await Promise.all([
-            fetch('standings.json'),
-            fetch('calendar.json')
+            fetch('standings2627.json'),
+            fetch('calendar2627.json')
         ]);
 
         standingsData = await sRes.json();
@@ -621,7 +621,7 @@ const TIE_SHORT_NAMES = {
     'Racing 92': 'R92',
     'Castres Olympique': 'CO',
     'USA Perpignan': 'USAP',
-    'US Montauban': 'USM',
+    'RC Vannes': 'RCV',
 };
 function shortTeamName(name) { return TIE_SHORT_NAMES[name] || name; }
 
