@@ -55,13 +55,13 @@
     "round": 5,
     "date": "Samedi 3 octobre 2026",
     "matches": [
-      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "LOU Rugby",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Stade Français Paris",      "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Stade Rochelais",           "awayTeam": "ASM Clermont",              "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Racing 92",                 "awayTeam": "USA Perpignan",             "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "RC Vannes",                 "awayTeam": "Section Paloise",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Castres Olympique",         "awayTeam": "Stade Toulousain",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "RC Toulon",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+      { "homeTeam": "Union Bordeaux-Bègles",     "awayTeam": "LOU Rugby",                 "homeScore": 51, "awayScore": 28, "homePts": 5, "awayPts": 0 },
+      { "homeTeam": "Aviron Bayonnais",          "awayTeam": "Stade Français Paris",      "homeScore": 35, "awayScore": 32, "homePts": 4, "awayPts": 1 },
+      { "homeTeam": "Stade Rochelais",           "awayTeam": "ASM Clermont",              "homeScore": 38, "awayScore": 13, "homePts": 5, "awayPts": 0 },
+      { "homeTeam": "Racing 92",                 "awayTeam": "USA Perpignan",             "homeScore": 55, "awayScore": 25, "homePts": 5, "awayPts": 0 },
+      { "homeTeam": "RC Vannes",                 "awayTeam": "Section Paloise",           "homeScore": 40, "awayScore": 43, "homePts": 1, "awayPts": 4 },
+      { "homeTeam": "Castres Olympique",         "awayTeam": "Stade Toulousain",          "homeScore": 1, "awayScore": 8, "homePts": 1, "awayPts": 4 },
+      { "homeTeam": "Montpellier Hérault Rugby", "awayTeam": "RC Toulon",                 "homeScore": 28, "awayScore": 0, "homePts": 5, "awayPts": 0 }
     ]
   },
   {
