@@ -68,13 +68,13 @@
     "round": 6,
     "date": "Samedi 10 octobre 2026",
     "matches": [
-      { "homeTeam": "Stade Français Paris",      "awayTeam": "Montpellier Hérault Rugby", "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "LOU Rugby",                 "awayTeam": "Stade Rochelais",           "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Section Paloise",           "awayTeam": "Castres Olympique",         "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "USA Perpignan",             "awayTeam": "RC Vannes",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "RC Toulon",                 "awayTeam": "Racing 92",                 "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "ASM Clermont",              "awayTeam": "Union Bordeaux-Bègles",     "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null },
-      { "homeTeam": "Stade Toulousain",          "awayTeam": "Aviron Bayonnais",          "homeScore": null, "awayScore": null, "homePts": null, "awayPts": null }
+      { "homeTeam": "Stade Français Paris",      "awayTeam": "Montpellier Hérault Rugby", "homeScore": 30, "awayScore": 22, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "LOU Rugby",                 "awayTeam": "Stade Rochelais",           "homeScore": 16, "awayScore": 28, "homePts": 0, "awayPts": 5 },
+      { "homeTeam": "Section Paloise",           "awayTeam": "Castres Olympique",         "homeScore": 35, "awayScore": 26, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "USA Perpignan",             "awayTeam": "RC Vannes",                 "homeScore": 21, "awayScore": 12, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "RC Toulon",                 "awayTeam": "Racing 92",                 "homeScore": 29, "awayScore": 15, "homePts": 4, "awayPts": 0 },
+      { "homeTeam": "ASM Clermont",              "awayTeam": "Union Bordeaux-Bègles",     "homeScore": 22, "awayScore": 23, "homePts": 1, "awayPts": 4 },
+      { "homeTeam": "Stade Toulousain",          "awayTeam": "Aviron Bayonnais",          "homeScore": 45, "awayScore": 34, "homePts": 5, "awayPts": 0 }
     ]
   },
   {
